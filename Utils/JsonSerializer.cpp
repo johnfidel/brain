@@ -16,10 +16,17 @@
 * @endverbatim
 *-------------------------------------------------------------------------------
 */
+#include <QJsonDocument>
+
 #include "JsonSerializer.h"
 
-cJsonSerializer::cJsonSerializer(QObject *parent) : QObject(parent)
+/*!
+ * \brief cJsonSerializer::cJsonSerializer
+ * \param parent
+ */
+QString cJsonSerializer::QJSonToString(const QJsonObject obj)
 {
-
+  QJsonDocument doc(obj);
+  return QString(doc.toJson(QJsonDocument::Compact));
 }
 

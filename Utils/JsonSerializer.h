@@ -1,17 +1,17 @@
 #ifndef CJSONSERIALIZER_H
 #define CJSONSERIALIZER_H
 
-#include <QObject>
+#include <QString>
+#include <QJsonObject>
 
-class cJsonSerializer : public QObject
+class cJsonSerializer
 {
-  Q_OBJECT
+
 public:
-  explicit cJsonSerializer(QObject *parent = 0);
 
-signals:
+  // convert QJSonObject into string
+  static QString QJSonToString(const QJsonObject obj);
 
-public slots:
 };
 
 #endif // CJSONSERIALIZER_H

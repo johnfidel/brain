@@ -15,16 +15,20 @@
 * @endverbatim
 *-------------------------------------------------------------------------------
 */
+#include <QDebug>
+
 #include "CoreState.h"
+#include "Input/Console/TextReader.h"
 
 /*!
  * \brief cCoreState::cCoreState
  *        standardconstructor
  * \param parent
  */
-cCoreState::cCoreState(QObject *parent) : QThread(parent)
+cCoreState::cCoreState(QObject *parent) :
+  QThread(parent)
 {
-
+  m_eMainState = Idle;
 }
 
 /*!
@@ -35,12 +39,27 @@ cCoreState::cCoreState(QObject *parent) : QThread(parent)
  * \brief cCoreState::exec
  * \return
  */
-int cCoreState::exec()
+void cCoreState::run()
 {
+  cTextReader consoleInput;
 
-  switch (m_MainState)
+  while (isRunning())
   {
+    QThread::msleep(20);
+    switch (m_eMainState)
+    {
 
+      case Idle:
+      {
+        consoleInput.DoWork();
+      }
+
+      default:
+      {
+
+      }
+
+    } /* switch (m_MainState); */
   }
 }
 

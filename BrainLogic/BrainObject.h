@@ -17,14 +17,26 @@ private:
 
 public:
 
-  //standard ctor
+  //standard ctor  
   explicit cBrainObject(QObject *parent = 0);
+
+  // copyconstructor
+  explicit cBrainObject(const cBrainObject &obj);
 
   // Special constructor
   explicit cBrainObject(const int langId, const QString name);
 
+  // adds the name for another language
+  void AddName(int langId, QString name);
+
+  // adds an image for the object
+  void AddImage(QImage image);
+
   // converts class into JSON object
   QJsonObject toJson();
+
+  // converst a JSon string into a cBrainObject
+  static cBrainObject fromString(const QString JsonString);
 
 signals:
 

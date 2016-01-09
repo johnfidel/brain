@@ -10,16 +10,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     BrainLogic/BrainObject.cpp \
-    Input/Ears/TextReader.cpp \
     Input/Eye/WebCam/WebCam.cpp \
     BrainLogic/CoreState.cpp \
-    Utils/JsonSerializer.cpp
+    Utils/JsonSerializer.cpp \
+    Input/Console/TextReader.cpp
 
 HEADERS += \
     gendefs.h \
     BrainLogic/BrainObject.h \
-    Input/Ears/TextReader.h \
     Input/Eye/WebCam/WebCam.h \
     BrainLogic/CoreState.h \
-    Utils/JsonSerializer.h
+    Utils/JsonSerializer.h \
+    Input/Console/TextReader.h
 

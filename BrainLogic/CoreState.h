@@ -22,7 +22,7 @@ private:
   /*!
    * \brief m_MainState, Stores the actual Mainstate
    */
-  eCoreState_typ m_MainState;
+  eCoreState_typ m_eMainState;
 
 public:
 
@@ -30,7 +30,7 @@ public:
   explicit cCoreState(QObject *parent = 0);
 
   // overrided function exec
-  virtual int exec();
+  void run();
 
 signals:
 

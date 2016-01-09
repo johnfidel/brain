@@ -1,12 +1,22 @@
 #include <QCoreApplication>
 #include <iostream>
 #include <QtSerialPort/QSerialPort>
+#include <QDebug>
+#include <QJsonDocument>
 
-#include "Input/Eye/WebCam/WebCam.h"
-#include "BrainLogic/BrainObject.h"
+#include "BrainLogic/CoreState.h"
 
 int main(int argc, char *argv[])
 {
-  cBrainObject obj();
+
+  // create mainthread
+  cCoreState App;
+  App.start();
+
+  // mainloop
+  while (App.isRunning());
+
+  return 0;
+
 }
 
