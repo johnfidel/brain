@@ -68,7 +68,7 @@ namespace EVENTS
        * \brief Event
        *        transmits an event
        */
-      void Event(const EVENTS::cEventNotifier &);
+      void Event(const EVENTS::cEvent&);
 
     public slots:
 
@@ -77,7 +77,7 @@ namespace EVENTS
        *        Slot to receive an event
        * \param event
        */
-      void OnEvent(const EVENTS::cEventNotifier &event);
+      void OnEvent(const EVENTS::cEvent&);
 
   };
 

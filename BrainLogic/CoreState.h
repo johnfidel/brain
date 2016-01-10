@@ -20,8 +20,9 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
+#include <QQueue>
 
-#include "EventNotifier.h"
+#include "Event.h"
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
 
@@ -43,6 +44,9 @@ class cCoreState : public QThread
 
     /// \brief mutex for thread safety
     QMutex m_Mutex;
+
+    /// \brief stores every event
+    QQueue<EVENTS::cEvent> m_EventQueue;
 
     // Event handler
     EVENTS::cEventHandler *m_pEventHandler;
@@ -77,5 +81,5 @@ class cCoreState : public QThread
      * \brief OnEvent
      *        receives events
      */
-    void OnEvent(const EVENTS::cEventNotifier &);
+    void OnEvent(const EVENTS::cEvent&);
 };

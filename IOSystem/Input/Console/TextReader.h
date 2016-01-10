@@ -25,11 +25,12 @@
 
 namespace INPUT
 {
-
   class cTextReader : public cInputInterface
   {
       Q_OBJECT
     private:
+
+      static const QString CONSOLE_PROMPT;
 
        /*!
         * \brief run

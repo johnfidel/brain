@@ -1,5 +1,4 @@
-#ifndef CBRAINOBJECT_H
-#define CBRAINOBJECT_H
+#pragma once
 
 #include <QObject>
 #include <QMap>
@@ -32,6 +31,11 @@ public:
   // adds an image for the object
   void AddImage(QImage image);
 
+  // Getter and setter
+  int Id() const { return m_id; }
+  QMap<int, QString> Dictionary() const { return m_dictionary; }
+  QImage Image() const { return m_image; }
+
   // converts class into JSON object
   QJsonObject toJson();
 
@@ -42,5 +46,3 @@ signals:
 
 public slots:
 };
-
-#endif // CBRAINOBJECT_H

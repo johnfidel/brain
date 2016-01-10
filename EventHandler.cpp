@@ -37,7 +37,7 @@ bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
 
   if (pThread != 0)
   {
-    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEventNotifier)), this, SLOT(OnEvent(EVENTS::cEventNotifier)));
+    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)));
   }
 
   return true;
@@ -49,7 +49,7 @@ bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
 
 //-----------------------------------------------------------------------------
 // transmit an event
-void EVENTS::cEventHandler::OnEvent(const EVENTS::cEventNotifier &event)
+void EVENTS::cEventHandler::OnEvent(const EVENTS::cEvent &event)
 {
   emit Event(event);
 }

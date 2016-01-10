@@ -1,11 +1,13 @@
 #include <QDebug>
 #include <QObject>
 #include <QTimer>
+#include <QQueue>
 
 #include "CoreState.h"
 #include "IOSystem/Input/Console/TextReader.h"
 #include "IOSystem/Input/InputInterface.h"
 #include "EventHandler.h"
+#include "BrainLogic/BrainObject.h"
 
 //****************************************************************************
 // private functions
@@ -16,6 +18,7 @@
 void cCoreState::run()
 {
   CoreStateEnum state = (CoreStateEnum)0;
+  EVENTS::cEvent event;
 
   while (isRunning())
   {
@@ -23,6 +26,10 @@ void cCoreState::run()
 
     m_Mutex.lock();
     state = m_eMainState;
+    if (!m_EventQueue.isEmpty())
+    {
+      event = m_EventQueue.dequeue();
+    }
     m_Mutex.unlock();
 
     switch (state)
@@ -36,7 +43,7 @@ void cCoreState::run()
 
       case HandleConsoleInput:
       {
-        int i = 0;
+        cBrainObject *obj = ne cBrainObject(event.m_text);
 
         break;
       }
@@ -66,20 +73,22 @@ cCoreState::cCoreState(QObject *parent) :
   QThread(parent)
 {
   // register event type once to metatypes
-  qRegisterMetaType<EVENTS::cEventNotifier>();
+  qRegisterMetaType<EVENTS::cEvent>();
 
   // initialize mainstate
   m_eMainState = Idle;
 
   // create eventhandler and register its signal
   m_pEventHandler = EVENTS::cEventHandler::Instance();
-  QObject::connect(m_pEventHandler, SIGNAL(Event(EVENTS::cEventNotifier)), this, SLOT(OnEvent(EVENTS::cEventNotifier)));
+  QObject::connect(m_pEventHandler, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)));
 
   // register threads to eventhandler
   m_pEventHandler->RegisterThread(&m_TextReader);
 
   // start threads
   m_TextReader.start();
+
+  m_EventQueue = QQueue<EVENTS::cEvent>();
 
 }
 //----------------------------------------------------------------------------
@@ -94,17 +103,18 @@ cCoreState::~cCoreState()
 
 //----------------------------------------------------------------------------
 // receives events
-void cCoreState::OnEvent(const EVENTS::cEventNotifier &event)
+void cCoreState::OnEvent(const EVENTS::cEvent &event)
 {
 
   // evaluate received event
   switch (event.UserEventId())
   {
 
-    case EVENTS::cEventNotifier::ConsoleInput:
+    case EVENTS::cEvent::ConsoleInput:
     {
       m_Mutex.lock();
       m_eMainState = HandleConsoleInput;
+      m_EventQueue.enqueue(EVENTS::cEvent(event));
       m_Mutex.unlock();
     }
 

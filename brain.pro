@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     BrainLogic/CoreState.cpp \
     Utils/JsonSerializer.cpp \
     IOSystem/Input/Console/TextReader.cpp \
-    EventHandler.cpp
+    EventHandler.cpp \
+    BrainLogic/MemoryManager.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -22,8 +23,9 @@ HEADERS += \
     BrainLogic/CoreState.h \
     Utils/JsonSerializer.h \
     IOSystem/Input/Console/TextReader.h \
-    EventNotifier.h \
     GenDefs.h \
     IOSystem/Input/InputInterface.h \
-    EventHandler.h
+    EventHandler.h \
+    BrainLogic/MemoryManager.h \
+    Event.h
 

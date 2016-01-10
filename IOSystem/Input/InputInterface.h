@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QThread>
 
-#include "EventNotifier.h"
+#include "Event.h"
 
 namespace INPUT
 {
@@ -54,7 +54,7 @@ namespace INPUT
        *        This Function is used to signalize events
        * \param event
        */
-      void Event(const EVENTS::cEventNotifier &);
+      void Event(const EVENTS::cEvent &);
 
     public slots:
 
