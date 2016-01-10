@@ -1,4 +1,5 @@
 /**
+
 * @file                     TextReader.cpp
 * @author                   RPi
 * @date                     04.01.2016
@@ -16,16 +17,38 @@
 * @endverbatim
 *-------------------------------------------------------------------------------
 */
+#pragma once
 
-#include "TextReader.h"
+#include <QObject>
 
-/*!
- * \brief cTextReader::cTextReader
- *          standard ctor
- * \param parent, parent Object
- */
-cTextReader::cTextReader(QObject *parent) : QObject(parent)
+#include "IOSystem/Input/InputInterface.h"
+
+namespace INPUT
 {
 
-}
+  class cTextReader : public cInputInterface
+  {
+      Q_OBJECT
+    private:
 
+       /*!
+        * \brief run
+        *        Main function of thread
+        */
+       void run();
+
+    public:
+
+      /*!
+       * \brief cTextReader
+       *        standard ctor
+       * \param parent
+       */
+      explicit cTextReader(QObject *parent = 0);
+
+    signals:
+
+    public slots:
+
+  };
+}

@@ -5,7 +5,7 @@
 #include <QCamera>
 #include <QCameraInfo>
 
-#include "gendefs.h"
+#include "GenDefs.h"
 
 class cWebCam
 {

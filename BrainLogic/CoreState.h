@@ -1,40 +1,81 @@
-#ifndef CORESTATE_H
-#define CORESTATE_H
+/**
+* @file                     CoreState.h
+* @author                   RPi
+* @date                     04.01.2016
+* @brief                    Main Thread of Brainlogic
+*
+*-------------------------------------------------------------------------------
+* @verbatim
+* Revisionhistory:
+*
+* Rev:  Datum:      Wer:        Was:
+* ------------------------------------------------------------------------------
+* V00   04.01.2016  rappic      Writing initial version
+*
+* @endverbatim
+*-------------------------------------------------------------------------------
+*/
+#pragma once
 
 #include <QObject>
 #include <QThread>
+#include <QMutex>
+
+#include "EventNotifier.h"
+#include "EventHandler.h"
+#include "IOSystem/Input/Console/TextReader.h"
 
 class cCoreState : public QThread
 {
   Q_OBJECT
-private:
 
-  /*!
-   * \brief The eCoreState_typ enum
-   *        Help enumerator for the internal statemachine
-   */
-  enum eCoreState_typ
-  {
-    Idle = 0,
+  private:
 
-  };
+    /// \brief main enumaration for states
+    enum CoreStateEnum
+    {
+      Idle = 0,
+      HandleConsoleInput = 1
+    };
 
-  /*!
-   * \brief m_MainState, Stores the actual Mainstate
-   */
-  eCoreState_typ m_eMainState;
+    /// \brief stores the mainstate of core thread
+    CoreStateEnum m_eMainState;
 
-public:
+    /// \brief mutex for thread safety
+    QMutex m_Mutex;
 
-  // standard constructor
-  explicit cCoreState(QObject *parent = 0);
+    // Event handler
+    EVENTS::cEventHandler *m_pEventHandler;
 
-  // overrided function exec
-  void run();
+    // Console input
+    INPUT::cTextReader m_TextReader;
 
-signals:
 
-public slots:
+    /*!
+     * \brief run
+     *        reimplements the run of QThread
+     */
+    void run();
+
+  public:
+
+    /*!
+     * \brief cCoreState
+     *        standard ctor
+     * \param parent
+     */
+    explicit cCoreState(QObject *parent = 0);
+
+    /// \brief destructor
+    ~cCoreState();
+
+  signals:
+
+  public slots:
+
+    /*!
+     * \brief OnEvent
+     *        receives events
+     */
+    void OnEvent(const EVENTS::cEventNotifier &);
 };
-
-#endif // CORE_H

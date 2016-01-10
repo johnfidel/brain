@@ -118,7 +118,7 @@ cBrainObject cBrainObject::fromString(const QString string)
 
   QJsonDocument strJson = QJsonDocument::fromJson(string.toUtf8());
   QJsonObject jsonObject = strJson.object();
-  //QJsonArray jsonArray = jsonObject["properties"].toArray();
+  QJsonArray jsonArray = jsonObject["properties"].toArray();
 
   //return cBrainObject();
 }

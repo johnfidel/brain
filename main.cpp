@@ -8,15 +8,18 @@
 
 int main(int argc, char *argv[])
 {
+  // create main application thread
+  QCoreApplication App(argc, argv);
 
   // create mainthread
-  cCoreState App;
-  App.start();
+  cCoreState BrainCore(&App);
+  BrainCore.start();
+
+  // close event
+  QObject::connect(&BrainCore, SIGNAL(finished()), &App, SLOT(quit()));
 
   // mainloop
-  while (App.isRunning());
-
-  return 0;
+  return App.exec();
 
 }
 
