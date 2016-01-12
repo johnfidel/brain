@@ -28,16 +28,25 @@ class cMemoryManager : public QObject
 
   private :
 
-    /// \brain list of all memories
-    QList<cBrainObject> m_MemoryList;
+    /// \brief brain list of all memories
+    QList<cBrainObject> *m_pMemoryList;
+
+    /// \brief instance holder
+    static cMemoryManager *m_pInstance;
+
+    /// \brief ctor (Singleton)
+    explicit cMemoryManager(QObject *parent = 0);
+
+    /// \brief destructor
+    ~cMemoryManager();
 
   public:
 
-    /*!
-     * \brief cMemoryManager
-     * \param parent
-     */
-    explicit cMemoryManager(QObject *parent = 0);
+    /// \brief To get an instance
+    static cMemoryManager *Instance();
+
+    /// \brief adds a object into list
+    void AddToMemory(const cBrainObject& Obj);
 
   signals:
 

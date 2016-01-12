@@ -32,51 +32,28 @@ namespace EVENTS
 
     private:
 
-      /*!
-       * \brief m_pInstance
-       * This member stores the instance of class
-       */
+      /// \brief this variable contains the instance
       static cEventHandler *m_pInstance;
 
-      /*!
-       * \brief cEventHandler
-       *        standard ctro
-       * \param parent
-       */
-      cEventHandler(QObject *parent = 0);
+      /// \brief private ctor to get an instance pointer
+      explicit cEventHandler(QObject *parent = 0);
 
     public:
 
-      /*!
-       * \brief Instance
-       *        To get an instance of the class
-       * \return
-       */
+      /// \brief Function to get an instance
       static cEventHandler *Instance();
 
-      /*!
-       * \brief RegisterThread
-       *        This function registers a thread to eventhandler
-       * \param thread
-       * \return
-       */
+      /// \brief Register any thread to the Eventhandler
       bool RegisterThread(INPUT::cInputInterface *pThread);
 
     signals:
 
-      /*!
-       * \brief Event
-       *        transmits an event
-       */
+      /// \brief Signalizes events
       void Event(const EVENTS::cEvent&);
 
     public slots:
 
-      /*!
-       * \brief OnEvent
-       *        Slot to receive an event
-       * \param event
-       */
+      /// \brief occures if an event of any thread is received
       void OnEvent(const EVENTS::cEvent&);
 
   };

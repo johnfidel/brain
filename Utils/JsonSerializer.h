@@ -1,5 +1,4 @@
-#ifndef CJSONSERIALIZER_H
-#define CJSONSERIALIZER_H
+#pragma once
 
 #include <QString>
 #include <QJsonObject>
@@ -9,9 +8,9 @@ class cJsonSerializer
 
 public:
 
-  // convert QJSonObject into string
-  static QString QJSonToString(const QJsonObject obj);
+  /// \brief convert QJSonObject into string
+  static QString QJSonToString(const QJsonObject& obj);
 
+  /// \brief save a QJSonObject to a file
+  static QString QJSonToFile(const QJsonObject& obj, const QString& File);
 };
-
-#endif // CJSONSERIALIZER_H

@@ -24,9 +24,25 @@
  * \brief cJsonSerializer::cJsonSerializer
  * \param parent
  */
-QString cJsonSerializer::QJSonToString(const QJsonObject obj)
+QString cJsonSerializer::QJSonToString(const QJsonObject &obj)
 {
   QJsonDocument doc(obj);
   return QString(doc.toJson(QJsonDocument::Compact));
 }
+
+/*!
+ * \brief cJsonSerializer::QJSonToFile
+ *        Save a JSON Object into a file
+ * \param obj
+ *        the Object
+ * \param File
+ *        the filename
+ * \return
+ */
+QString cJsonSerializer::QJSonToFile(const QJsonObject &obj, const QString &File)
+{
+
+}
+
+
 
