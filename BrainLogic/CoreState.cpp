@@ -8,13 +8,15 @@
 #include "IOSystem/Input/InputInterface.h"
 #include "EventHandler.h"
 #include "BrainLogic/BrainObject.h"
+#include "Utils/JsonSerializer.h"
 
 //****************************************************************************
 // private functions
 //
 
-//----------------------------------------------------------------------------
-// Main function
+/*!
+ * \brief cCoreState::run
+ */
 void cCoreState::run()
 {
   CoreStateEnum state = (CoreStateEnum)0;
@@ -43,7 +45,9 @@ void cCoreState::run()
 
       case HandleConsoleInput:
       {
-        //cBrainObject *obj = new cBrainObject(event.m_text);
+        cBrainObject *pObj = new cBrainObject(event.Text());
+        m_pMemoryManager->AddToMemory(*pObj);
+        cJsonSerializer::QJSonToFile(pObj->toJson(), pObj->TimeStamp().toString("YYYYMMDD_hhmmss"));
 
         break;
       }
@@ -67,8 +71,10 @@ void cCoreState::run()
 // public functions
 //
 
-//----------------------------------------------------------------------------
-// standard ctor
+/*!
+ * \brief cCoreState::cCoreState
+ * \param parent
+ */
 cCoreState::cCoreState(QObject *parent) :
   QThread(parent)
 {
@@ -85,6 +91,9 @@ cCoreState::cCoreState(QObject *parent) :
   m_pEventHandler = EVENTS::cEventHandler::Instance();
   QObject::connect(m_pEventHandler, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)));
 
+  // create memorymanager
+  m_pMemoryManager = cMemoryManager::Instance();
+
   // register threads to eventhandler
   m_pEventHandler->RegisterThread(&m_TextReader);
 
@@ -96,16 +105,19 @@ cCoreState::cCoreState(QObject *parent) :
 }
 //----------------------------------------------------------------------------
 
-//----------------------------------------------------------------------------
-// dtor
+/*!
+ * \brief cCoreState::~cCoreState
+ */
 cCoreState::~cCoreState()
 {
 
 }
 //----------------------------------------------------------------------------
 
-//----------------------------------------------------------------------------
-// receives events
+/*!
+ * \brief cCoreState::OnEvent
+ * \param event
+ */
 void cCoreState::OnEvent(const EVENTS::cEvent &event)
 {
 

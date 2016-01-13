@@ -5,8 +5,10 @@
 // Private functions
 //
 
-//-----------------------------------------------------------------------------
-// constructor
+///
+/// \brief EVENTS::cEventHandler::cEventHandler
+/// \param parent
+///
 EVENTS::cEventHandler::cEventHandler(QObject *parent) :
   QObject(parent)
 {
@@ -17,8 +19,9 @@ EVENTS::cEventHandler::cEventHandler(QObject *parent) :
 //*****************************************************************************
 // public functions
 
-//-----------------------------------------------------------------------------
-// to get an instance
+///
+/// \brief EVENTS::cEventHandler::m_pInstance
+///
 EVENTS::cEventHandler* EVENTS::cEventHandler::m_pInstance= 0;
 EVENTS::cEventHandler* EVENTS::cEventHandler::Instance()
 {
@@ -30,8 +33,11 @@ EVENTS::cEventHandler* EVENTS::cEventHandler::Instance()
 }
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-// this function register a thread to eventhandler
+///
+/// \brief EVENTS::cEventHandler::RegisterThread
+/// \param pThread
+/// \return
+///
 bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
 {
 
@@ -47,8 +53,10 @@ bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
 //*****************************************************************************
 // public slots
 
-//-----------------------------------------------------------------------------
-// transmit an event
+///
+/// \brief EVENTS::cEventHandler::OnEvent
+/// \param event
+///
 void EVENTS::cEventHandler::OnEvent(const EVENTS::cEvent &event)
 {
   emit Event(event);

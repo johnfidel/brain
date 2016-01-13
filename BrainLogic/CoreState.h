@@ -26,6 +26,7 @@
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
 #include "Settings/AppConfig.h"
+#include "MemoryManager.h"
 
 class cCoreState : public QThread
 {
@@ -52,26 +53,21 @@ class cCoreState : public QThread
     /// \brief stores the app config class
     SETTINGS::cAppConfig *m_pAppConfig;
 
-    // Event handler
+    /// \brief Event handler
     EVENTS::cEventHandler *m_pEventHandler;
 
-    // Console input
+    /// \brief memory Manager
+    cMemoryManager *m_pMemoryManager;
+
+    /// \brief Console input
     INPUT::cTextReader m_TextReader;
 
-
-    /*!
-     * \brief run
-     *        reimplements the run of QThread
-     */
+    /// \brief Reimplementation of function run() of QThread
     void run();
 
   public:
 
-    /*!
-     * \brief cCoreState
-     *        standard ctor
-     * \param parent
-     */
+    /// \brief standard ctor
     explicit cCoreState(QObject *parent = 0);
 
     /// \brief destructor
@@ -81,9 +77,6 @@ class cCoreState : public QThread
 
   public slots:
 
-    /*!
-     * \brief OnEvent
-     *        receives events
-     */
+    /// \brief receives events
     void OnEvent(const EVENTS::cEvent&);
 };
