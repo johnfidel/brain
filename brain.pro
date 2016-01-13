@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     Utils/JsonSerializer.cpp \
     IOSystem/Input/Console/TextReader.cpp \
     EventHandler.cpp \
-    BrainLogic/MemoryManager.cpp
+    BrainLogic/MemoryManager.cpp \
+    Settings/AppConfig.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -27,5 +28,10 @@ HEADERS += \
     IOSystem/Input/InputInterface.h \
     EventHandler.h \
     BrainLogic/MemoryManager.h \
-    Event.h
+    Event.h \
+    Settings/AppConfig.h \
+    Settings/AppConfig_Def.h \
+    ModDefs.h
+
+DISTFILES +=
 

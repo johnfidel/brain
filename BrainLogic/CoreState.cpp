@@ -43,7 +43,7 @@ void cCoreState::run()
 
       case HandleConsoleInput:
       {
-        cBrainObject *obj = ne cBrainObject(event.m_text);
+        cBrainObject *obj = new cBrainObject(event.m_text);
 
         break;
       }
