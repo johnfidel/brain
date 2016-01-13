@@ -3,10 +3,67 @@
 //-----------------------------------------------------------------------------
 #include <QSettings>
 #include <QString>
+#include <QObject>
 
 #include "GenDefs.h"
 #include "AppConfig.h"
 #include "AppConfig_Def.h"
+
+//****************************************************************************
+//****************************************************************************
+// class cAppConfig
+//
+
+//****************************************************************************
+// private function
+//
+
+///
+/// \brief cAppConfig
+/// \param parent
+///
+SETTINGS::cAppConfig::cAppConfig(QObject *parent) :
+  QObject(parent)
+{
+
+}
+//----------------------------------------------------------------------------
+
+///
+/// \brief SETTINGS::cAppConfig::~cAppConfig
+///
+SETTINGS::cAppConfig::~cAppConfig()
+{
+  if (m_pInstance != 0)
+  {
+    delete m_pInstance;
+    m_pInstance = 0;
+  }
+}
+//----------------------------------------------------------------------------
+
+//****************************************************************************
+// public function
+//
+
+///
+/// \brief SETTINGS::cAppConfig::m_pInstance
+///
+SETTINGS::cAppConfig *SETTINGS::cAppConfig::m_pInstance = 0;
+SETTINGS::cAppConfig *SETTINGS::cAppConfig::Instance()
+{
+  if (m_pInstance == 0)
+  {
+    m_pInstance = new cAppConfig();
+  }
+  return m_pInstance;
+}
+//---------------------------------------------------------------------------
+
+//****************************************************************************
+//****************************************************************************
+// class cAppConfigReadWrit
+//
 
 //****************************************************************************
 // private functions
@@ -21,7 +78,7 @@
 /// \param write
 /// \return
 ///
-QVariant SETTINGS::cAppConfig::config(QString section, QString key, QString def, QVariant value, bool write)
+QVariant SETTINGS::cAppConfigReadWrite::config(QString section, QString key, QString def, QVariant value, bool write)
 {
 #ifdef DESKTOP
     QSettings app(QSettings::UserScope, ORGANISATION, APPLICATION_NAME);
@@ -47,9 +104,9 @@ QVariant SETTINGS::cAppConfig::config(QString section, QString key, QString def,
 /// \brief SETTINGS::cAppConfig::Language
 /// \return
 ///
-int SETTINGS::cAppConfig::LogLevel()
+int SETTINGS::cAppConfigReadWrite::LogLevel()
 {
-    return config(CONFIGFILE_SETTINGS, CONFIGFILE_ACTUAL_LANGUAGE, DEFAULT_LANGUAGE, "").toString();
+    return config(SECTION_SETTINGS, VARIABLE_LOGLEVEL, DEFAULT_LOGLEVEL, "").toInt();
 }
 //-----------------------------------------------------------------------------
 
@@ -57,8 +114,8 @@ int SETTINGS::cAppConfig::LogLevel()
 /// \brief SETTINGS::cAppConfig::Language
 /// \param value
 ///
-void SETTINGS::cAppConfig::LogLevel(int value)
+void SETTINGS::cAppConfigReadWrite::LogLevel(int value)
 {
-    config(CONFIGFILE_SETTINGS, CONFIGFILE_ACTUAL_LANGUAGE, "", value, true);
+    config(SECTION_SETTINGS, VARIABLE_LOGLEVEL, "", value, true);
 }
 //-----------------------------------------------------------------------------

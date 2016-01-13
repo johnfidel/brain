@@ -43,7 +43,7 @@ void cCoreState::run()
 
       case HandleConsoleInput:
       {
-        cBrainObject *obj = new cBrainObject(event.m_text);
+        //cBrainObject *obj = new cBrainObject(event.m_text);
 
         break;
       }
@@ -77,6 +77,9 @@ cCoreState::cCoreState(QObject *parent) :
 
   // initialize mainstate
   m_eMainState = Idle;
+
+  //Appconfig
+  m_pAppConfig = SETTINGS::cAppConfig::Instance();
 
   // create eventhandler and register its signal
   m_pEventHandler = EVENTS::cEventHandler::Instance();

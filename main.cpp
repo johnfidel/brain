@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[])
 {
+
   // create main application thread
   QCoreApplication App(argc, argv);
 

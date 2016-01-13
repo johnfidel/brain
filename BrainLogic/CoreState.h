@@ -25,6 +25,7 @@
 #include "Event.h"
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
+#include "Settings/AppConfig.h"
 
 class cCoreState : public QThread
 {
@@ -47,6 +48,9 @@ class cCoreState : public QThread
 
     /// \brief stores every event
     QQueue<EVENTS::cEvent> m_EventQueue;
+
+    /// \brief stores the app config class
+    SETTINGS::cAppConfig *m_pAppConfig;
 
     // Event handler
     EVENTS::cEventHandler *m_pEventHandler;
