@@ -1,3 +1,6 @@
+#include <QTextStream>
+#include <QDebug>
+
 #include "Utils/Logger.h"
 
 //*****************************************************************************
@@ -9,7 +12,7 @@
 /// \param parent
 ///
 UTILS::cLogger::cLogger(QObject *parent) :
-  QObject(parent), m_LoggerSettings((LoggerSettingsEnum)0)
+  QObject(parent), m_LoggerSettings((LoggerSettingsEnum)1)
 {
 
 }
@@ -22,7 +25,27 @@ UTILS::cLogger::cLogger(QObject *parent) :
 ///
 void UTILS::cLogger::LogMessage(const QString& msg)
 {
-  //if (m_LoggerSettings & LoggerSettingsEnum::)
+  // logg to consoel
+  if ((m_LoggerSettings & toDebugConsole) == toDebugConsole)
+  {
+    qDebug() << msg;
+  }
+
+  if ((m_LoggerSettings & toConsole) == toConsole)
+  {
+    QTextStream cout(stdout);
+    cout << msg;
+  }
+
+  if ((m_LoggerSettings & toFile) == toFile)
+  {
+    // not yet implemented
+  }
+
+  if ((m_LoggerSettings & toSocket) == toSocket)
+  {
+    // not yet implemented
+  }
 }
 //-----------------------------------------------------------------------------
 
@@ -45,9 +68,19 @@ UTILS::cLogger* UTILS::cLogger::Instance()
 //-----------------------------------------------------------------------------
 
 ///
+/// \brief UTILS::cLogger::Logger
+/// \return
+///
+UTILS::cLogger& UTILS::cLogger::Logger()
+{
+  return *Instance();
+}
+//-----------------------------------------------------------------------------
+
+///
 /// \brief UTILS::cLogger::ConfigureLogger
 ///
-bool UTILS::cLogger::ConfigureLogger(const int settings)
+bool UTILS::cLogger::ConfigureLogger(const LoggerSettingsEnum settings)
 {
 
   m_LoggerSettings = settings;
@@ -56,7 +89,24 @@ bool UTILS::cLogger::ConfigureLogger(const int settings)
 }
 //-----------------------------------------------------------------------------
 
-UTILS::cLogger& UTILS::cLogger::operator<<(QString in)
+///
+/// \brief UTILS::cLogger::operator <<
+/// \param in
+/// \return
+///
+UTILS::cLogger& UTILS::cLogger::operator <<(const QString& in)
 {
   LogMessage(in);
 }
+//-----------------------------------------------------------------------------
+
+///
+/// \brief UTILS::cLogger::operator <<
+/// \param in
+/// \return
+///
+UTILS::cLogger& UTILS::cLogger::operator <<(int in)
+{
+  LogMessage(QString::number(in));
+}
+//-----------------------------------------------------------------------------

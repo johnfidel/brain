@@ -20,9 +20,11 @@ int main(int argc, char *argv[])
   // close event
   QObject::connect(&BrainCore, SIGNAL(finished()), &App, SLOT(quit()));
 
-  UTILS::cLogger *logger = UTILS::cLogger::Instance();
+  //UTILS::cLogger *logger = UTILS::cLogger::Instance();
 
-  logger << QString("Application started at:");
+  UTILS::cLogger::Logger() << QString("Application started at:");
+
+  UTILS::cLogger::Logger() << 5;
 
   // mainloop
   return App.exec();

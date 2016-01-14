@@ -33,6 +33,7 @@ namespace UTILS
       /// \brief this enum defines the logging output
       enum LoggerSettingsEnum
       {
+        none = 0,
         toDebugConsole = 1,
         toConsole = 2,
         toFile = 4,
@@ -56,11 +57,15 @@ namespace UTILS
       /// \brief Function to get an instance
       static cLogger *Instance();
 
+      /// \brief to access the logger
+      static cLogger& Logger();
+
       /// \brief set the logging output
-      bool ConfigureLogger(const int config);
+      bool ConfigureLogger(const LoggerSettingsEnum config);
 
       /// \brief output some msg on logger
-      cLogger& operator<<(QString);
+      cLogger& operator <<(const QString&);
+      cLogger& operator <<(int);
 
     signals:
 
