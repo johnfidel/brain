@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     IOSystem/Input/Console/TextReader.cpp \
     EventHandler.cpp \
     BrainLogic/MemoryManager.cpp \
-    Settings/AppConfig.cpp
+    Settings/AppConfig.cpp \
+    Utils/Logger.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -31,7 +32,8 @@ HEADERS += \
     Event.h \
     Settings/AppConfig.h \
     Settings/AppConfig_Def.h \
-    ModDefs.h
+    ModDefs.h \
+    Utils/Logger.h
 
 DISTFILES +=
 
