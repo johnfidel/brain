@@ -18,6 +18,8 @@
 #pragma once
 
 #include <QObject>
+#include <QtWebSockets/QtWebSockets>
+#include <QtWebSockets/QWebSocketServer>
 
 #include "IOSystem/Input/InputInterface.h"
 
@@ -48,6 +50,12 @@ namespace UTILS
       /// \brief stores the current loggingsetup
       int m_LoggerSettings;
 
+      /// \bief opens a socketconnection for the listener
+      QWebSocketServer *m_pServerSocket;
+
+      /// \brief list of all connected sockets
+      QList<QWebSocket*> m_SocketList;
+
       /// \brief private ctor to get an instance pointer
       explicit cLogger(QObject *parent = 0);
 
@@ -69,7 +77,12 @@ namespace UTILS
 
     signals:
 
-    public slots:
+    private slots:
+
+      /// \brief slot for Sockets handling
+      void onNewConnection();
+      void processMessage(QString message);
+      void socketDisconnected();
 
   };
 

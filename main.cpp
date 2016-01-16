@@ -3,6 +3,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QDebug>
 #include <QJsonDocument>
+#include <QDateTime>
 
 #include "BrainLogic/CoreState.h"
 #include "Utils/Logger.h"
@@ -20,11 +21,8 @@ int main(int argc, char *argv[])
   // close event
   QObject::connect(&BrainCore, SIGNAL(finished()), &App, SLOT(quit()));
 
-  //UTILS::cLogger *logger = UTILS::cLogger::Instance();
-
-  UTILS::cLogger::Logger() << QString("Application started at:");
-
-  UTILS::cLogger::Logger() << 5;
+  // log programstard
+  UTILS::cLogger::Logger() << QString("Application started at:");// << QDateTime::currentDateTime().toString();
 
   // mainloop
   return App.exec();

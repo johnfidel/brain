@@ -1,6 +1,8 @@
 QT += core
 QT += multimedia
 QT -= gui
+QT += network
+QT += websockets
 
 TARGET = brain
 CONFIG += console

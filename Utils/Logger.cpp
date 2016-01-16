@@ -1,5 +1,9 @@
 #include <QTextStream>
 #include <QDebug>
+#include <QCoreApplication>
+#include <QtWebSockets/QWebSocketServer>
+#include <QHostAddress>
+#include <QtWebSockets/QWebSocket>
 
 #include "Utils/Logger.h"
 
@@ -12,7 +16,8 @@
 /// \param parent
 ///
 UTILS::cLogger::cLogger(QObject *parent) :
-  QObject(parent), m_LoggerSettings((LoggerSettingsEnum)1)
+  QObject(parent), m_LoggerSettings((LoggerSettingsEnum)1),
+  m_SocketList()
 {
 
 }
@@ -44,7 +49,16 @@ void UTILS::cLogger::LogMessage(const QString& msg)
 
   if ((m_LoggerSettings & toSocket) == toSocket)
   {
-    // not yet implemented
+    if (m_pServerSocket == 0)
+    {
+      m_pServerSocket = new QWebSocketServer(QCoreApplication::applicationName().append(QString(" logging service")),
+                                              QWebSocketServer::NonSecureMode, this);
+
+      if (m_pServerSocket->listen(QHostAddress::Any, 1234))
+      {
+
+      }
+    }
   }
 }
 //-----------------------------------------------------------------------------
@@ -85,6 +99,21 @@ bool UTILS::cLogger::ConfigureLogger(const LoggerSettingsEnum settings)
 
   m_LoggerSettings = settings;
 
+  if ((m_LoggerSettings & toSocket) == toSocket)
+  {
+    // create socket connection
+    if (m_pServerSocket == 0)
+    {
+      m_pServerSocket = new QWebSocketServer(QCoreApplication::applicationName().append(QString(" logging service")),
+                                              QWebSocketServer::NonSecureMode, this);
+
+      if (m_pServerSocket->listen(QHostAddress::Any, 1234))
+      {
+        QObject::connect(m_pServerSocket, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+      }
+    }
+  }
+
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -110,3 +139,40 @@ UTILS::cLogger& UTILS::cLogger::operator <<(int in)
   LogMessage(QString::number(in));
 }
 //-----------------------------------------------------------------------------
+
+//*****************************************************************************
+// private slots
+//
+
+///
+/// \brief UTILS::cLogger::onNewConnection
+///
+void UTILS::cLogger::onNewConnection()
+{
+  QWebSocket *pSocket = m_pServerSocket->nextPendingConnection();
+
+  QObject::connect(pSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(processMessage(QString)));
+
+  m_SocketList.append(pSocket);
+
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief UTILS::cLogger::processMessage
+/// \param message
+///
+void UTILS::cLogger::processMessage(QString message)
+{
+
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief UTILS::cLogger::socketDisconnected
+///
+void UTILS::cLogger::socketDisconnected()
+{
+
+}
+//----------------------------------------------------------------------------
