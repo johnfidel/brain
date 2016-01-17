@@ -1,6 +1,8 @@
 QT += core
 QT += multimedia
 QT -= gui
+QT += network
+QT += websockets
 
 TARGET = brain
 CONFIG += console
@@ -10,22 +12,40 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     BrainLogic/BrainObject.cpp \
-    IOSystem/Input/Eye/WebCam/WebCam.cpp \
     BrainLogic/CoreState.cpp \
-    Utils/JsonSerializer.cpp \
+    BrainLogic/MemoryManager.cpp \
+\
+    IOSystem/Input/Eye/WebCam/WebCam.cpp \
     IOSystem/Input/Console/TextReader.cpp \
-    EventHandler.cpp \
-    BrainLogic/MemoryManager.cpp
+\
+    Logging/Logger.cpp \
+\
+    Utils/JsonSerializer.cpp \
+\
+    Settings/AppConfig.cpp \
+    EventHandler.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
-    IOSystem/Input/Eye/WebCam/WebCam.h \
     BrainLogic/CoreState.h \
-    Utils/JsonSerializer.h \
-    IOSystem/Input/Console/TextReader.h \
-    GenDefs.h \
-    IOSystem/Input/InputInterface.h \
-    EventHandler.h \
     BrainLogic/MemoryManager.h \
-    Event.h
+\
+    IOSystem/Input/Eye/WebCam/WebCam.h \
+    IOSystem/Input/Console/TextReader.h \
+    IOSystem/Input/InputInterface.h \
+\
+    Logging/Logger.h \
+    Logging/LogMessage.h \
+\
+    Utils/JsonSerializer.h \
+\
+    Settings/AppConfig.h \
+    Settings/AppConfig_Def.h \
+\
+    GenDefs.h \
+    EventHandler.h \
+    Event.h \
+    ModDefs.h
+
+DISTFILES +=
 

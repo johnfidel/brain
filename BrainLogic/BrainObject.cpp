@@ -1,20 +1,3 @@
-/**
-* @file                     BrainObject.cpp
-* @author                   RPi
-* @date                     04.01.2016
-* @brief                    This class describes a known object to the brain.
-*
-*-------------------------------------------------------------------------------
-* @verbatim
-* Revisionhistory:
-*
-* Rev:  Datum:      Wer:        Was:
-* ------------------------------------------------------------------------------
-* V00   04.01.2016  rappic      Writing initial version
-*
-* @endverbatim
-*-------------------------------------------------------------------------------
-*/
 #include <QJsonValue>
 #include <QJsonArray>
 #include <algorithm>
@@ -23,71 +6,99 @@
 
 #include "BrainObject.h"
 
-/*!
-  \class cBainObject
-  \brief This class contains the
-*/
-/*----------------------------------------------------------------------*/
+//***********************************************************************
+// private functions
+//
 
+//***********************************************************************
+// public functions
+//
 
-/*!
-  \brief cBrainObject::cBrainObject
-           This is the constructor of the class
-  \param parent, The parent object
- */
+///
+/// \brief cBrainObject::cBrainObject
+/// \param parent
+///
 cBrainObject::cBrainObject(QObject *parent) :
+  QObject(parent), m_id(-1), m_dictionary()//, m_pImage(0)
+{
+  // save creation time
+  m_TimeStamp = QDateTime::currentDateTime();
+}
+//------------------------------------------------------------------------
+
+///
+/// \brief cBrainObject::cBrainObject
+///         Copyconstructor
+/// \param obj
+///
+cBrainObject::cBrainObject(const cBrainObject &obj) :
+  QObject()
+{
+  m_dictionary = obj.m_dictionary;
+  m_id = obj.m_id;
+//  if (obj.m_pImage != 0)
+//  {
+//    m_pImage = new QImage(*obj.m_pImage);
+//  }
+  m_TimeStamp = obj.m_TimeStamp;
+
+}
+//------------------------------------------------------------------------
+
+///
+/// \brief cBrainObject::cBrainObject
+/// \param name
+/// \param langId
+///
+cBrainObject::cBrainObject(const QString name, const int langId, QObject *parent) :
   QObject(parent)
 {
-
+  // save creation time
+  m_TimeStamp = QDateTime::currentDateTime();
+  // add the name to dictionary
+  m_dictionary.insert(langId, name);
 }
-/*----------------------------------------------------------------------*/
+//------------------------------------------------------------------------
 
-
-// copyconstructor
-cBrainObject::cBrainObject(const cBrainObject &obj)
+///
+/// \brief cBrainObject::~cBrainObject
+///
+cBrainObject::~cBrainObject()
 {
-
+//  if (m_pImage != 0)
+//  {
+//    delete m_pImage;
+//    m_pImage = 0;
+//  }
 }
+//------------------------------------------------------------------------
 
-/*!
-  \brief cBrainObject
-           Constructor for a new object
-  \param langId, the Id of the language
-  \param name, name in the specified language
- */
-cBrainObject::cBrainObject(const int langId, const QString name)
-{
-
-}
-/*----------------------------------------------------------------------*/
-
-/*!
- * \brief cBrainObject::AddName
- * \param langId
- * \param name
- */
-void cBrainObject::AddName(int langId, QString name)
+///
+/// \brief cBrainObject::AddName
+/// \param name
+/// \param langId
+///
+void cBrainObject::AddName(const QString& name, int langId)
 {
   m_dictionary.insert(langId, name);
 }
-/*----------------------------------------------------------------------*/
+//------------------------------------------------------------------------
 
-/*!
- * \brief cBrainObject::AddImage
- * \param image
- */
-void cBrainObject::AddImage(QImage image)
+///
+/// \brief cBrainObject::AddImage
+/// \param image
+///
+void cBrainObject::AddImage(const QImage& image)
 {
-  m_image = image;
+  //*m_pImage = image;
 }
-/*----------------------------------------------------------------------*/
+//------------------------------------------------------------------------
 
-/*!
- * \brief cBrainObject::toJson
- *        Converts this Object into a JSON Object
- * \return
- */
-QJsonObject cBrainObject::toJson()
+///
+/// \brief cBrainObject::toJson
+/// \return
+///
+QJsonObject cBrainObject::toJson() const
 {
   QJsonObject tmp;
   QJsonArray array;
@@ -105,14 +116,14 @@ QJsonObject cBrainObject::toJson()
   return tmp;
 
 }
-/*----------------------------------------------------------------------*/
+//------------------------------------------------------------------------
 
-/*!
- * \brief cBrainObject::fromString
- *        converts a string into a Object
- * \param JsonString
- */
-cBrainObject cBrainObject::fromString(const QString string)
+///
+/// \brief cBrainObject::fromString
+/// \param string
+/// \return
+///
+cBrainObject cBrainObject::fromString(const QString& string)
 {
   cBrainObject obj;
 
@@ -122,4 +133,4 @@ cBrainObject cBrainObject::fromString(const QString string)
 
   //return cBrainObject();
 }
-/*----------------------------------------------------------------------*/
+//------------------------------------------------------------------------

@@ -1,7 +1,5 @@
-#ifndef GENDEFS_H
-#define GENDEFS_H
+#pragma once
 
 #include <QDebug>
 
-#endif // GENDEFS_H
-
+#include "ModDefs.h"

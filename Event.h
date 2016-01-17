@@ -96,12 +96,9 @@ namespace EVENTS
         return *this;
       }
 
-      /*!
-       * \brief UserEventId
-       *        getter for m_eUserEventId
-       * \return
-       */
+      /// \brief Getter and Setter for local variables
       UserEventEnum UserEventId() const { return m_eUserEventId; }
+      QString Text() const { return m_text; }
 
     signals:
 
