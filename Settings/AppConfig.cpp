@@ -80,11 +80,7 @@ SETTINGS::cAppConfig *SETTINGS::cAppConfig::Instance()
 ///
 QVariant SETTINGS::cAppConfigReadWrite::config(QString section, QString key, QString def, QVariant value, bool write)
 {
-#ifdef DESKTOP
     QSettings app(QSettings::UserScope, ORGANISATION, APPLICATION_NAME);
-#else
-    QSettings app(QSettings::SystemScope, ORGANISATION, APPLICATION_NAME);
-#endif
 
     if (write) {
         app.setValue(section + key, value);
@@ -106,7 +102,7 @@ QVariant SETTINGS::cAppConfigReadWrite::config(QString section, QString key, QSt
 ///
 int SETTINGS::cAppConfigReadWrite::LogLevel()
 {
-    return config(SECTION_SETTINGS, VARIABLE_LOGLEVEL, DEFAULT_LOGLEVEL, "").toInt();
+    return config(SECTION_SETTINGS, VARIABLE_LOGGINGLEVEL, DEFAULT_LOGGINGLEVEL, "").toInt();
 }
 //-----------------------------------------------------------------------------
 
@@ -116,6 +112,26 @@ int SETTINGS::cAppConfigReadWrite::LogLevel()
 ///
 void SETTINGS::cAppConfigReadWrite::LogLevel(int value)
 {
-    config(SECTION_SETTINGS, VARIABLE_LOGLEVEL, "", value, true);
+    config(SECTION_SETTINGS, VARIABLE_LOGGINGLEVEL, "", value, true);
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief SETTINGS::cAppConfig::Language
+/// \return
+///
+int SETTINGS::cAppConfigReadWrite::LogOutput()
+{
+    return config(SECTION_SETTINGS, VARIABLE_LOGGINGOUTPUT, DEFAULT_LOGGINGOUTPUT, "").toInt();
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief SETTINGS::cAppConfig::Language
+/// \param value
+///
+void SETTINGS::cAppConfigReadWrite::LogOutput(int value)
+{
+    config(SECTION_SETTINGS, VARIABLE_LOGGINGOUTPUT, "", value, true);
 }
 //-----------------------------------------------------------------------------

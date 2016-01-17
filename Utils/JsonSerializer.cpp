@@ -24,10 +24,20 @@
  * \brief cJsonSerializer::cJsonSerializer
  * \param parent
  */
-QString cJsonSerializer::QJSonToString(const QJsonObject &obj)
+QString cJsonSerializer::QJsonToString(const QJsonObject& obj)
 {
   QJsonDocument doc(obj);
   return QString(doc.toJson(QJsonDocument::Compact));
+}
+
+///
+/// \brief cJsonSerializer::QStringToJson
+/// \param str
+/// \return
+///
+QJsonObject cJsonSerializer::QStringToJson(const QString& str)
+{
+  return QJsonObject();
 }
 
 /*!
@@ -39,9 +49,10 @@ QString cJsonSerializer::QJSonToString(const QJsonObject &obj)
  *        the filename
  * \return
  */
-QString cJsonSerializer::QJSonToFile(const QJsonObject &obj, const QString &File)
+bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
 {
 
+  return false;
 }
 
 

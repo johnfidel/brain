@@ -19,23 +19,29 @@
 /// \param parent
 ///
 cBrainObject::cBrainObject(QObject *parent) :
-  QObject(parent)
+  QObject(parent), m_id(-1), m_dictionary()//, m_pImage(0)
 {
   // save creation time
   m_TimeStamp = QDateTime::currentDateTime();
 }
 //------------------------------------------------------------------------
 
-
 ///
 /// \brief cBrainObject::cBrainObject
 ///         Copyconstructor
 /// \param obj
 ///
-cBrainObject::cBrainObject(const cBrainObject &obj)
-
+cBrainObject::cBrainObject(const cBrainObject &obj) :
+  QObject()
 {
-  *this = obj;
+  m_dictionary = obj.m_dictionary;
+  m_id = obj.m_id;
+//  if (obj.m_pImage != 0)
+//  {
+//    m_pImage = new QImage(*obj.m_pImage);
+//  }
+  m_TimeStamp = obj.m_TimeStamp;
+
 }
 //------------------------------------------------------------------------
 
@@ -55,11 +61,24 @@ cBrainObject::cBrainObject(const QString name, const int langId, QObject *parent
 //------------------------------------------------------------------------
 
 ///
+/// \brief cBrainObject::~cBrainObject
+///
+cBrainObject::~cBrainObject()
+{
+//  if (m_pImage != 0)
+//  {
+//    delete m_pImage;
+//    m_pImage = 0;
+//  }
+}
+//------------------------------------------------------------------------
+
+///
 /// \brief cBrainObject::AddName
 /// \param name
 /// \param langId
 ///
-void cBrainObject::AddName(QString name, int langId)
+void cBrainObject::AddName(const QString& name, int langId)
 {
   m_dictionary.insert(langId, name);
 }
@@ -69,9 +88,9 @@ void cBrainObject::AddName(QString name, int langId)
 /// \brief cBrainObject::AddImage
 /// \param image
 ///
-void cBrainObject::AddImage(QImage image)
+void cBrainObject::AddImage(const QImage& image)
 {
-  m_image = image;
+  //*m_pImage = image;
 }
 //------------------------------------------------------------------------
 
@@ -79,7 +98,7 @@ void cBrainObject::AddImage(QImage image)
 /// \brief cBrainObject::toJson
 /// \return
 ///
-QJsonObject& cBrainObject::toJson() const
+QJsonObject cBrainObject::toJson() const
 {
   QJsonObject tmp;
   QJsonArray array;
@@ -104,7 +123,7 @@ QJsonObject& cBrainObject::toJson() const
 /// \param string
 /// \return
 ///
-cBrainObject cBrainObject::fromString(const QString string)
+cBrainObject cBrainObject::fromString(const QString& string)
 {
   cBrainObject obj;
 
@@ -113,19 +132,5 @@ cBrainObject cBrainObject::fromString(const QString string)
   QJsonArray jsonArray = jsonObject["properties"].toArray();
 
   //return cBrainObject();
-}
-//------------------------------------------------------------------------
-
-///
-/// \brief cBrainObject::operator =
-/// \param other
-/// \return
-///
-cBrainObject cBrainObject::operator=(const cBrainObject& other)
-{
-  m_TimeStamp = other.m_TimeStamp;
-  m_dictionary = other.m_dictionary;
-  m_image = other.m_image;
-  m_id = other.m_id;
 }
 //------------------------------------------------------------------------

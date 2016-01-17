@@ -9,6 +9,7 @@
 #include "EventHandler.h"
 #include "BrainLogic/BrainObject.h"
 #include "Utils/JsonSerializer.h"
+#include "Logging/Logger.h"
 
 //****************************************************************************
 // private functions
@@ -30,6 +31,7 @@ void cCoreState::run()
     state = m_eMainState;
     if (!m_EventQueue.isEmpty())
     {
+      // read out event from queue
       event = m_EventQueue.dequeue();
     }
     m_Mutex.unlock();
@@ -45,9 +47,12 @@ void cCoreState::run()
 
       case HandleConsoleInput:
       {
+        // log incoming input
+        LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelInfo);
+
         cBrainObject *pObj = new cBrainObject(event.Text());
         m_pMemoryManager->AddToMemory(*pObj);
-        cJsonSerializer::QJSonToFile(pObj->toJson(), pObj->TimeStamp().toString("YYYYMMDD_hhmmss"));
+        cJsonSerializer::QJsonToFile(pObj->toJson(), pObj->TimeStamp().toString("YYYYMMDD_hhmmss"));
 
         break;
       }

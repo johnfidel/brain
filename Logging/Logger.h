@@ -21,26 +21,25 @@
 #include <QtWebSockets/QtWebSockets>
 #include <QtWebSockets/QWebSocketServer>
 
-#include "IOSystem/Input/InputInterface.h"
+#include "Logging/LogMessage.h"
 
-namespace UTILS
+namespace LOGGING
 {
-
   class cLogger : public QObject
   {
       Q_OBJECT
-
     public:
 
       /// \brief this enum defines the logging output
-      enum LoggerSettingsEnum
+      enum LoggingOutput
       {
-        none = 0,
-        toDebugConsole = 1,
-        toConsole = 2,
-        toFile = 4,
-        toSocket = 8
+        LoggingOutputNone = 0,
+        LoggingOutputToDebugConsole = 1,
+        LoggingOutputToConsole = 2,
+        LoggingOutputToFile = 4,
+        LoggingOutputToSocket = 8
       };
+      Q_DECLARE_FLAGS(LoggingOutputs, LoggingOutput);
 
     private:
 
@@ -48,32 +47,39 @@ namespace UTILS
       static cLogger *m_pInstance;
 
       /// \brief stores the current loggingsetup
-      int m_LoggerSettings;
+      LoggingOutputs m_LoggingOutput;
+
+      /// \brief stores the current logginglevel
+      LoggingLevel m_LoggingLevel;
 
       /// \bief opens a socketconnection for the listener
-      QWebSocketServer *m_pServerSocket;
+      QTcpServer *m_pServerSocket;
 
       /// \brief list of all connected sockets
-      QList<QWebSocket*> m_SocketList;
+      QList<QTcpSocket*> m_SocketList;
 
       /// \brief private ctor to get an instance pointer
       explicit cLogger(QObject *parent = 0);
 
-      void LogMessage(const QString&);
+      void LogMessage(const cLogMessage&);
+
     public:
 
       /// \brief Function to get an instance
       static cLogger *Instance();
 
+      /// \brief destructor
+      ~cLogger();
+
       /// \brief to access the logger
       static cLogger& Logger();
 
       /// \brief set the logging output
-      bool ConfigureLogger(const LoggerSettingsEnum config);
+      bool ConfigureLogger(LoggingOutput config);
+      bool ConfigureLogger(LoggingLevel config);
 
       /// \brief output some msg on logger
-      cLogger& operator <<(const QString&);
-      cLogger& operator <<(int);
+      void operator <<(const cLogMessage&);
 
     signals:
 
@@ -81,9 +87,9 @@ namespace UTILS
 
       /// \brief slot for Sockets handling
       void onNewConnection();
-      void processMessage(QString message);
       void socketDisconnected();
 
   };
+  Q_DECLARE_OPERATORS_FOR_FLAGS(cLogger::LoggingOutputs);
 
 }

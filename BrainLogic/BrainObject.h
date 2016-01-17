@@ -30,40 +30,41 @@ private:
 
   int m_id;
   QMap<int, QString> m_dictionary;
-  QImage m_image;
+  //QImage *m_pImage;
   QDateTime m_TimeStamp;
 
 public:
 
   /// \brief standard ctor
   explicit cBrainObject(QObject *parent = 0);
-
   /// \brief copyconstructor
   explicit cBrainObject(const cBrainObject &obj);
+  /// \brief operator =
+  cBrainObject operator=(const cBrainObject&);
+
+  /// \brief destructor
+  ~cBrainObject();
 
   /// \brief Special constructor
   explicit cBrainObject(const QString name, const int langId = 0, QObject *parent = 0);
 
   /// \brief adds the name for another language
-  void AddName(QString name, int langId = 0);
+  void AddName(const QString&, int langId = 0);
 
   /// \brief adds an image for the object
-  void AddImage(QImage image);
+  void AddImage(const QImage&);
 
   /// \brief Getter and setter
   int Id() const { return m_id; }
   QMap<int, QString> Dictionary() const { return m_dictionary; }
-  QImage Image() const { return m_image; }
+  //QImage Image() const { return *m_pImage; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
 
   /// \brief converts class into JSON object
-  QJsonObject& toJson() const;
+  QJsonObject toJson() const;
 
   /// \brief converst a JSon string into a cBrainObject
-  static cBrainObject fromString(const QString JsonString);
-
-  /// \brief operator =
-  cBrainObject operator=(const cBrainObject& other);
+  cBrainObject fromString(const QString&);
 
 signals:
 
