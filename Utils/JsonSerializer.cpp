@@ -17,7 +17,8 @@
 *-------------------------------------------------------------------------------
 */
 #include <QJsonDocument>
-
+#include <QFile>
+#include <QDataStream>
 #include "JsonSerializer.h"
 
 /*!
@@ -42,7 +43,7 @@ QJsonObject cJsonSerializer::QStringToJson(const QString& str)
 
 /*!
  * \brief cJsonSerializer::QJSonToFile
- *        Save a JSON Object into a file
+ *       Save a JSON Object into a file
  * \param obj
  *        the Object
  * \param File
@@ -51,6 +52,10 @@ QJsonObject cJsonSerializer::QStringToJson(const QString& str)
  */
 bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
 {
+  QJsonDocument doc(obj);
+  QFile jsonFile(File);
+  jsonFile.open(QFile::WriteOnly);
+  jsonFile.write(doc.toJson());
 
   return false;
 }
