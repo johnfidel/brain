@@ -77,13 +77,9 @@ void cMemoryManager::AddToShortMemory(cBrainObject& Obj)
 {
   m_MemoryList.shortMemory.append(&Obj);
 
-#ifdef DEBUG
-  QString FileName;
-  //FileName << QString(WORKSPACE_PATH) << QString(MEMORY_SHORT) << Obj.TimeStamp().toString("yyyymmdd_hhmmss");
-  cJsonSerializer::QJsonToFile(Obj.toJson(), FileName);
-#else
-  cJsonSerializer::QJsonToFile(Obj.toJson(), Obj.TimeStamp().toString(QString(MEMORY_LONGTERM) + "yyyymmdd_hhmmss"));
-#endif //DEBUG
+  QString fileName(WORKSPACE_PATH "/" MEMORY_SHORT);
+  fileName.append(Obj.TimeStamp().toString("yyyymmdd_hhmmss"));
+  cJsonSerializer::QJsonToFile(Obj.toJson(), fileName);
 
 }
 //-----------------------------------------------------------------------------
