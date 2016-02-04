@@ -42,6 +42,10 @@ void cCoreState::run()
       case Idle:
       {
 
+        // we have nothing to do... lets memorymanager
+        // do some sorting in our memory
+        m_pMemoryManager->ManageMemory();
+
         break;
       }
 
@@ -49,10 +53,8 @@ void cCoreState::run()
       {
         // log incoming input
         LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelInfo);
-
-        cBrainObject *pObj = new cBrainObject(event.Text());
-        m_pMemoryManager->AddToMemory(*pObj);
-        cJsonSerializer::QJsonToFile(pObj->toJson(), pObj->TimeStamp().toString("YYYYMMDD_hhmmss"));
+        // Create new memoryentry
+        m_pMemoryManager->AddToMemory(event.Text());
 
         break;
       }
@@ -61,14 +63,13 @@ void cCoreState::run()
       {
 
       }
-
     } /* switch (m_MainState); */
-  }
 
-  m_Mutex.lock();
-  m_eMainState = Idle;
-  m_Mutex.unlock();
+    m_Mutex.lock();
+    m_eMainState = Idle;
+    m_Mutex.unlock();
 
+  } // while() /*
 }
 //----------------------------------------------------------------------------
 

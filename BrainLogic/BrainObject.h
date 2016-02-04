@@ -48,6 +48,9 @@ public:
   /// \brief Special constructor
   explicit cBrainObject(const QString name, const int langId = 0, QObject *parent = 0);
 
+  /// \brief Special constructor
+  explicit cBrainObject(const int idx, const QString name, const int langId = 0, QObject *parent = 0);
+
   /// \brief adds the name for another language
   void AddName(const QString&, int langId = 0);
 

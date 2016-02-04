@@ -18,6 +18,8 @@
 */
 #include <QJsonDocument>
 #include <QFile>
+#include <QDir>
+#include <QFileInfo>
 #include <QDataStream>
 #include "JsonSerializer.h"
 
@@ -54,8 +56,17 @@ bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
 {
   QJsonDocument doc(obj);
   QFile jsonFile(File);
-  jsonFile.open(QFile::WriteOnly);
+
+  QFileInfo *jsonFileInfo = new QFileInfo(jsonFile.fileName());
+  if (!jsonFileInfo->absoluteDir().exists())
+  {
+    jsonFileInfo->absoluteDir().mkpath(jsonFileInfo->absoluteDir().absolutePath());
+  }
+
+  jsonFile.open(QFile::ReadWrite);
   jsonFile.write(doc.toJson());
+
+  delete jsonFileInfo;
 
   return false;
 }

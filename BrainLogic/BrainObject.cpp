@@ -60,6 +60,25 @@ cBrainObject::cBrainObject(const QString name, const int langId, QObject *parent
 }
 //------------------------------------------------------------------------
 
+/*!
+ * \brief cBrainObject::cBrainObject
+ * \param idx
+ * \param name
+ * \param langId
+ * \param parent
+ */
+cBrainObject::cBrainObject(const int idx, const QString name, const int langId, QObject *parent) :
+  QObject(parent)
+{
+  //save idx
+  m_id = idx;
+  // save creation time
+  m_TimeStamp = QDateTime::currentDateTime();
+  // add the name to dictionary
+  m_dictionary.insert(langId, name);
+}
+//------------------------------------------------------------------------
+
 ///
 /// \brief cBrainObject::~cBrainObject
 ///

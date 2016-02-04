@@ -1,5 +1,6 @@
 #include "MemoryManager.h"
 #include "BrainLogic/BrainObject.h"
+#include "Utils/JsonSerializer.h"
 
 //******************************************************************************
 // private functions
@@ -10,9 +11,10 @@
  *        private constructor to initialize singleton
  * \param parent
  */
-cMemoryManager::cMemoryManager(QObject *parent) : QObject(parent)
+cMemoryManager::cMemoryManager(QObject *parent) :
+  QObject(parent), m_ActualIndex(0)
 {
-  m_pMemoryList = new QList<cBrainObject>();
+
 }
 //-----------------------------------------------------------------------------
 
@@ -21,12 +23,17 @@ cMemoryManager::cMemoryManager(QObject *parent) : QObject(parent)
 ///
 cMemoryManager::~cMemoryManager()
 {
-  if (m_pMemoryList != 0)
+  // clean up memnory
+  foreach (cBrainObject *obj, m_MemoryList.longMemory)
   {
-    delete m_pMemoryList;
-    m_pMemoryList = 0;
+    delete obj;
+  }
+  foreach (cBrainObject *obj, m_MemoryList.shortMemory)
+  {
+    delete obj;
   }
 }
+//-----------------------------------------------------------------------------
 
 //******************************************************************************
 // public functions
@@ -45,12 +52,47 @@ cMemoryManager *cMemoryManager::Instance()
   }
   return m_pInstance;
 }
+//-----------------------------------------------------------------------------
+
+/*!
+ * \brief cMemoryManager::AddToMemory
+ * \param Text
+ */
+void cMemoryManager::AddToMemory(const QString& Text)
+{
+  // create new brainObject
+  cBrainObject *pObj = new cBrainObject(m_ActualIndex++, Text);
+
+  // add it to list of shortmemory
+  AddToShortMemory(*pObj);
+
+}
+//-----------------------------------------------------------------------------
 
 ///
 /// \brief cMemoryManager::AddToMemory
 /// \param Obj
 ///
-void cMemoryManager::AddToMemory(const cBrainObject& Obj)
+void cMemoryManager::AddToShortMemory(cBrainObject& Obj)
 {
-  m_pMemoryList->append(Obj);
+  m_MemoryList.shortMemory.append(&Obj);
+
+#ifdef DEBUG
+  QString FileName;
+  //FileName << QString(WORKSPACE_PATH) << QString(MEMORY_SHORT) << Obj.TimeStamp().toString("yyyymmdd_hhmmss");
+  cJsonSerializer::QJsonToFile(Obj.toJson(), FileName);
+#else
+  cJsonSerializer::QJsonToFile(Obj.toJson(), Obj.TimeStamp().toString(QString(MEMORY_LONGTERM) + "yyyymmdd_hhmmss"));
+#endif //DEBUG
+
 }
+//-----------------------------------------------------------------------------
+
+/*!
+ * \brief cMemoryManager::ManageMemory
+ */
+void cMemoryManager::ManageMemory()
+{
+
+}
+//-----------------------------------------------------------------------------

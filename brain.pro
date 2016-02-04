@@ -10,6 +10,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+DEFINES += DEBUG
+
 SOURCES += main.cpp \
     BrainLogic/BrainObject.cpp \
     BrainLogic/CoreState.cpp \
@@ -45,7 +47,8 @@ HEADERS += \
     GenDefs.h \
     EventHandler.h \
     Event.h \
-    ModDefs.h
+    ModDefs.h \
+    BrainLogic/MemoryManager_Def.h
 
 DISTFILES +=
 
