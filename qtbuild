@@ -1,0 +1,161 @@
+#!/bin/sh
+#
+# -----------------------------------
+# author:	johnfidel
+# date:		04.02.2016
+# purpose:	
+# -----------------------------------
+ 
+name="build"
+version="1.0"
+
+#local variables
+CONFIG_FILE=".qtbuild_config"
+BUILD_DIR="../build-brain/"
+
+print_version()
+{
+	echo ""
+	echo " Script: $name / Version: $version"
+	echo " Enter -h for help"
+	echo ""
+}
+
+print_help() 
+{
+	echo ""
+	echo -e "\t scriptname:\t $name"
+	echo -e "\t version:\t $version"
+	echo ""
+	echo " ----------------------------- help --------------------------------------------------- "
+	echo ""
+	echo " usage: $name [PARAM] [OPTION]"
+	echo ""
+	echo " Parameters:"
+  echo -e " all:\t\t\t creates all targets"
+  echo -e " config [qt path]:\t configures path to qt. Must be done at first usage"
+	echo ""
+	echo " Options:"
+	echo -e " -h, -? or help: Print this help"
+	echo -e " -v:\t\t show verbose output"
+	echo -e " -V:\t\t show script version"
+	echo -e " -n:\t\t dry-run -> Do nothing, just show me whats would be done."
+	echo ""
+}
+
+do_stuff()
+{
+	if [ -z "$dryrun" ]; then
+		# do some things
+		echo ""
+	fi
+}
+
+#sets all environment Variables
+SetEnvironment()
+{
+  #check if environment is allready set
+  if [ -n "$QT_PATH" ]; then
+    return
+  else
+
+    if [ -e $CONFIG_FILE ]; then
+      qtpath=$(cat $CONFIG_FILE)
+      if [ -n "$qtpath" ]; then
+        echo "Set QT_PATH to: $qtpath"
+        export QT_PATH=$qtpath
+      fi
+    else
+      echo "Config file is inexistent... type qtbuild -h for help."
+      exit 1
+    fi
+  fi
+
+}
+
+#check if all needed programs are installed
+check_prerequisites()
+{
+  if [ -z "$(which qmake)" ]; then
+    echo
+    exit 1
+  fi
+
+}
+
+# Main Script Routine
+# -------------------------------------------------------------------------------------
+#
+# if no arguments are available
+if [ -z "$1" ]; then
+	echo ""
+	echo "no arguments... "
+	echo " Enter -h for help"
+	echo ""
+	exit 1
+fi
+
+# process every argument
+until [ -z "$1" ]; do
+	case $1 in
+
+		# arguments
+    "all")
+      check_prerequisites
+      SetEnvironment
+
+      if [ ! -e $BUILD_DIR ]; then
+        mkdir $BUILD_DIR
+      fi
+      cd $BUILD_DIR
+
+      #perform qmake
+      $QT_PATH/gcc/bin/qmake ../brain/brain.pro -r -spec linux-g++-32 CONFIG+=release
+      #perform make clean and make
+      make clean && make
+
+    ;;
+
+    "config")
+      shift
+      if [ -n "$1" ]; then
+        # write config to file
+        echo $1 > $CONFIG_FILE
+        echo "set qt path to $1"
+      fi
+    ;;
+
+		# options
+
+		"-h"|"-?")
+			print_help
+			exit 0
+		;;
+
+		"-V")
+			print_version
+			exit 0
+		;;
+
+		"-v")
+			verbose="true"
+		;;
+
+		*)
+			echo "invalid argument $1"
+			print_help
+			exit 1
+		;;
+	esac
+	shift
+done
+
+echo -n "do stuff ... "
+
+do_stuff
+
+echo "terminated"
+
+exit 0
+
+

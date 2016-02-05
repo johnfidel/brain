@@ -47,5 +47,6 @@ HEADERS += \
     Event.h \
     ModDefs.h
 
-DISTFILES +=
+DISTFILES += \
+    qtbuild
 
