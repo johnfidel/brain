@@ -37,7 +37,8 @@ print_help()
   echo " With no parameter, $name will try to use the last config."
   echo ""
   echo -e " configure:\t should be done the first time"
-  echo -e " all [project_file] [output_dir]:\t\t executes the build process"
+  echo -e " all [project_file] [output_dir]:\t\t executes the build process."
+  echo -e "                                 \t\t let output_dir empty if no shadow build is needed."
   echo ""
   echo " Or you can simply give in the qmake parameter directly "
 	echo ""
@@ -65,10 +66,11 @@ Prerequisites()
 
   # get nr of cpu
   nrofcpu=$(nproc)
-  echo "found $nrofcpu CPUs. Try to use them."
   if [ $nrofcpu -ge 2 ]; then
+    echo "found $nrofcpu CPUs. Try to use them."
     NR_OF_CPU="-j$nrofcpu"
   else
+    echo "only one usable CPU. Do not compile with -j option"
     NR_OF_CPU=""
   fi
 
@@ -114,13 +116,15 @@ do_stuff()
     GetConfig
 
     # start build process
-    echo "exit actual directory"
-    cd ..
-    if [ ! -e $output_dir ]; then
-      mkdir -v $output_dir
+    if [ ! -z $output_dir ]; then
+      echo "exit actual directory"
+      cd ..
+      if [ ! -e $output_dir ]; then
+        mkdir -v $output_dir
+      fi
+      echo "go into $output_dir"
+      cd $output_dir
     fi
-    echo "go into $output_dir"
-    cd $output_dir
     cmd="$QMAKE1 ../brain/$project_file $QMAKE2"
     echo "perform $cmd in directory $(pwd)"
     $cmd
@@ -164,8 +168,10 @@ until [ -z "$1" ]; do
     "all")
       shift
       project_file=$1
-      shift
-      output_dir=$1
+      if [ $# -gt 1 ]; then
+        shift
+        output_dir=$1
+      fi   
       all="true"
     ;;
 
