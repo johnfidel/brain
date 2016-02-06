@@ -50,5 +50,6 @@ HEADERS += \
     ModDefs.h \
     BrainLogic/MemoryManager_Def.h
 
-DISTFILES +=
+DISTFILES += \
+    qtbuild
 
