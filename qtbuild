@@ -11,7 +11,9 @@ version="1.0"
 
 #local variables
 CONFIG_FILE=".qtbuild_config"
-BUILD_DIR="../build-brain/"
+QT_VERSION="5.5"
+PLATFORM_SPEC="-r -spec linux-g++-32"
+BUILD_CONFIG="CONFIG+=release"
 
 print_version()
 {
@@ -32,53 +34,104 @@ print_help()
 	echo " usage: $name [PARAM] [OPTION]"
 	echo ""
 	echo " Parameters:"
-  echo -e " all:\t\t\t creates all targets"
-  echo -e " config [qt path]:\t configures path to qt. Must be done at first usage"
+  echo " With no parameter, $name will try to use the last config."
+  echo ""
+  echo -e " configure:\t should be done the first time"
+  echo -e " all [project_file] [output_dir]:\t\t executes the build process"
+  echo ""
+  echo " Or you can simply give in the qmake parameter directly "
 	echo ""
 	echo " Options:"
 	echo -e " -h, -? or help: Print this help"
 	echo -e " -v:\t\t show verbose output"
 	echo -e " -V:\t\t show script version"
-	echo -e " -n:\t\t dry-run -> Do nothing, just show me whats would be done."
 	echo ""
 }
 
-do_stuff()
+#check if all needed programs are installed
+Prerequisites()
 {
-	if [ -z "$dryrun" ]; then
-		# do some things
-		echo ""
-	fi
-}
-
-#sets all environment Variables
-SetEnvironment()
-{
-  #check if environment is allready set
-  if [ -n "$QT_PATH" ]; then
-    return
-  else
-
-    if [ -e $CONFIG_FILE ]; then
-      qtpath=$(cat $CONFIG_FILE)
-      if [ -n "$qtpath" ]; then
-        echo "Set QT_PATH to: $qtpath"
-        export QT_PATH=$qtpath
-      fi
-    else
-      echo "Config file is inexistent... type qtbuild -h for help."
-      exit 1
-    fi
+  # get qt path
+  qtpath=$(locate Qt/$QT_VERSION -n 1)
+  if [ -n "$qtpath" ]; then
+    QT_PATH=$qtpath
   fi
 
+  #check qmake
+  echo "use $($QT_PATH/gcc/bin/qmake -v)"
+
+  #check make
+  which make
+
+  # get nr of cpu
+  nrofcpu=$(nproc)
+  if [ $nrofcpu -gt 1 ]; then
+    NR_OF_CPU=$nrofcpu
+  fi
+
+  # first line of config file
+  echo "$QT_PATH/gcc/bin/qmake" > $CONFIG_FILE
+  echo "$PLATFORM_SPEC $BUILD_CONFIG" >> $CONFIG_FILE
+  echo "make clean -j$NR_OF_CPU" >> $CONFIG_FILE
+  echo "make -j$NR_OF_CPU" >> $CONFIG_FILE
+
 }
 
-#check if all needed programs are installed
-check_prerequisites()
+# read out the config of configfile
+GetConfig()
 {
-  if [ -z "$(which qmake)" ]; then
-    echo
+
+  if [ ! -e $CONFIG_FILE ]; then
     exit 1
+  fi
+
+  # read in config file
+  i=0
+  while read line; do
+    i=`expr $i + 1`
+    if [ $i -eq 1 ]; then QMAKE1=$line; fi
+    if [ $i -eq 2 ]; then QMAKE2=$line; fi
+    if [ $i -eq 3 ]; then CLEAN=$line; fi
+    if [ $i -eq 4 ]; then MAKE=$line; fi
+  done < $CONFIG_FILE
+}
+
+# this is the executing stuff function
+do_stuff()
+{
+  # save actual path
+  actualPath=$(pwd)
+
+  if [ -n "$configure" ]; then
+    Prerequisites
+  fi
+
+  if [ -n "$all" ]; then
+    GetConfig
+
+    # start build process
+    echo "exit actual directory"
+    cd ..
+    if [ ! -e $output_dir ]; then
+      mkdir -v $output_dir
+    fi
+    echo "go into $output_dir"
+    cd $output_dir
+    cmd="$QMAKE1 ../brain/$project_file $QMAKE2"
+    echo "perform $cmd in directory $(pwd)"
+    $cmd
+
+    cmd=$CLEAN
+    echo "perform $cmd"
+    $cmd
+
+    cmd=$MAKE
+    echo "perform $cmd"
+    $cmd
+
+    #returning to initial dir
+    cd $actualPath
+
   fi
 
 }
@@ -97,32 +150,19 @@ fi
 
 # process every argument
 until [ -z "$1" ]; do
-	case $1 in
+  case ${1} in
 
-		# arguments
-    "all")
-      check_prerequisites
-      SetEnvironment
-
-      if [ ! -e $BUILD_DIR ]; then
-        mkdir $BUILD_DIR
-      fi
-      cd $BUILD_DIR
-
-      #perform qmake
-      $QT_PATH/gcc/bin/qmake ../brain/brain.pro -r -spec linux-g++-32 CONFIG+=release
-      #perform make clean and make
-      make clean && make
-
+		# arguments    
+    "configure")
+      configure="true"
     ;;
 
-    "config")
+    "all")
       shift
-      if [ -n "$1" ]; then
-        # write config to file
-        echo $1 > $CONFIG_FILE
-        echo "set qt path to $1"
-      fi
+      project_file=$1
+      shift
+      output_dir=$1
+      all="true"
     ;;
 
 		# options
@@ -141,16 +181,17 @@ until [ -z "$1" ]; do
 			verbose="true"
 		;;
 
-		*)
-			echo "invalid argument $1"
-			print_help
-			exit 1
-		;;
+    *)
+      echo "invalid argument $1"
+      print_help
+      exit 1
+    ;;
+
 	esac
 	shift
 done
 
-echo -n "do stuff ... "
+echo "do stuff ... "
 
 do_stuff
 
