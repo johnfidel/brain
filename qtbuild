@@ -65,7 +65,8 @@ Prerequisites()
 
   # get nr of cpu
   nrofcpu=$(nproc)
-  if [ $nrofcpu -gt 1 ]; then
+  echo "found $nrofcpu CPUs. Try to use them."
+  if [ $nrofcpu -ge 2 ]; then
     NR_OF_CPU="-j$nrofcpu"
   else
     NR_OF_CPU=""
