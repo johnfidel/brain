@@ -82,7 +82,8 @@ GetConfig()
 {
 
   if [ ! -e $CONFIG_FILE ]; then
-    exit 1
+    echo "no configuration available! force config"
+    Prerequisites
   fi
 
   # read in config file
