@@ -29,7 +29,7 @@ class cBrainObject : public QObject
 private:
 
   int m_id;
-  QMap<int, QString> m_dictionary;
+  QString m_Name;
   //QImage *m_pImage;
   QDateTime m_TimeStamp;
 
@@ -46,20 +46,17 @@ public:
   ~cBrainObject();
 
   /// \brief Special constructor
-  explicit cBrainObject(const QString name, const int langId = 0, QObject *parent = 0);
+  explicit cBrainObject(const QString name, QObject *parent = 0);
 
   /// \brief Special constructor
-  explicit cBrainObject(const int idx, const QString name, const int langId = 0, QObject *parent = 0);
-
-  /// \brief adds the name for another language
-  void AddName(const QString&, int langId = 0);
+  explicit cBrainObject(const int idx, const QString name, QObject *parent = 0);
 
   /// \brief adds an image for the object
   void AddImage(const QImage&);
 
   /// \brief Getter and setter
   int Id() const { return m_id; }
-  QMap<int, QString> Dictionary() const { return m_dictionary; }
+  QString Name() const { return m_Name; }
   //QImage Image() const { return *m_pImage; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
 

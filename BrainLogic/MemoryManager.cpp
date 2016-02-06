@@ -89,6 +89,13 @@ void cMemoryManager::AddToShortMemory(cBrainObject& Obj)
  */
 void cMemoryManager::ManageMemory()
 {
-
+  // try to create dependencies between memoryObjects
+  foreach (cBrainObject *obj, m_MemoryList.shortMemory)
+  {
+    foreach (cBrainObject *compObj, m_MemoryList.shortMemory)
+    {
+      //if obj.Name()
+    }
+  }
 }
 //-----------------------------------------------------------------------------
