@@ -52,17 +52,28 @@ print_help()
 #check if all needed programs are installed
 Prerequisites()
 {
+  echo "look for mlocate..."
+  if [ -z $(which mlocate) ]; then
+    echo "mlocate is not installed. Try apt-get install mlocat"
+    exit 1
+  fi
+  
   # get qt path
-  qtpath=$(locate Qt/$QT_VERSION -n 1)
+  qtpath=$(mlocate Qt/$QT_VERSION -n 1)
   if [ -n "$qtpath" ]; then
     QT_PATH=$qtpath
   fi
 
-  #check qmake
-  echo "use $($QT_PATH/gcc/bin/qmake -v)"
 
   #check make
-  which make
+  echo "look for make..."
+  if [ -z $(which make) ]; then
+    echo "make seems not to be installed. Try apt-get install build-essentials"
+    exit 1
+  fi
+
+  #check qmake
+  echo "use $($QT_PATH/gcc/bin/qmake -v)"
 
   # get nr of cpu
   nrofcpu=$(nproc)
