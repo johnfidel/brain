@@ -118,11 +118,14 @@ do_stuff()
 {
   # save actual path
   actualPath=$(pwd)
+  echo "actually in directory: $actualPath"
 
+  # get all prerequisites, if we should configure
   if [ -n "$configure" ]; then
     Prerequisites
   fi
 
+  # start build for all
   if [ -n "$all" ]; then
     GetConfig
 
@@ -137,15 +140,24 @@ do_stuff()
       cd $output_dir
     fi
 
-    cmd="$QMAKE1 ../brain/$project_file $QMAKE2"
-    echo "perform $cmd in directory $(pwd)"
+    # check if a projectfile is provided, if not take the first one found in
+    # actual directory
+    if [ -z $project_file ]; then
+      project_file=$(ls *.pro)
+    fi
 
+    # create full qmake command
+    cmd="$QMAKE1 $actualPath/$project_file $QMAKE2"
+    echo "perform $cmd"
+
+    # execute qmake command
     if [ -z $verbose ]; then
       $cmd > /dev/zero
     else
       $cmd > /dev/zero
     fi
 
+    # create clean command
     cmd=$CLEAN
     echo "perform $cmd"
 
@@ -155,6 +167,7 @@ do_stuff()
       $cmd
     fi
 
+    # create make command
     cmd=$MAKE
     echo "perform $cmd"
 
@@ -193,8 +206,10 @@ until [ -z "$1" ]; do
     ;;
 
     "all")
-      shift
-      project_file=$1
+      if [ $# -gt 1 ]; then
+        shift
+        project_file=$1
+      fi
       if [ $# -gt 1 ]; then
         shift
         output_dir=$1
