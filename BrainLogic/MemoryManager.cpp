@@ -1,5 +1,8 @@
+#include <QStringList>
+
 #include "MemoryManager.h"
 #include "BrainLogic/BrainObject.h"
+#include "BrainLogic/BrainExperience.h"
 #include "Utils/JsonSerializer.h"
 
 //******************************************************************************
@@ -60,12 +63,28 @@ cMemoryManager *cMemoryManager::Instance()
  */
 void cMemoryManager::AddToMemory(const QString& Text)
 {
-  // create new brainObject
-  cBrainObject *pObj = new cBrainObject(m_ActualIndex++, Text);
+  // check if this is a experience of a object
+  if (Text.split(" ").count() > 1)
+  {
+    cBrainExperience *pExp = new cBrainExperience(this);
 
-  // add it to list of shortmemory
-  AddToShortMemory(*pObj);
+    QStringList list = Text.split(" ");
+    foreach (QString str, list)
+    {
+      cBrainObject *obj = new cBrainObject(m_ActualIndex++, str, this);
+      pExp->AddObject(obj);
+    }
+    // ad to memory
+    AddToShortMemory(pExp);
+  }
+  else
+  {
+    // create new brainObject
+    cBrainObject *pObj = new cBrainObject(m_ActualIndex++, Text, this);
 
+    // add it to list of shortmemory
+    AddToShortMemory(*pObj);
+  }
 }
 //-----------------------------------------------------------------------------
 
@@ -73,14 +92,27 @@ void cMemoryManager::AddToMemory(const QString& Text)
 /// \brief cMemoryManager::AddToMemory
 /// \param Obj
 ///
-void cMemoryManager::AddToShortMemory(cBrainObject& Obj)
+void cMemoryManager::AddToMemory(cBrainObject& Obj)
 {
-  m_MemoryList.shortMemory.append(&Obj);
+  m_MemoryList.mem.append(&Obj);
 
   QString fileName(WORKSPACE_PATH "/" MEMORY_SHORT);
   fileName.append(Obj.TimeStamp().toString("yyyymmdd_hhmmss"));
   cJsonSerializer::QJsonToFile(Obj.toJson(), fileName);
+}
+//-----------------------------------------------------------------------------
 
+///
+/// \brief cMemoryManager::AddToMemory
+/// \param Obj
+///
+void cMemoryManager::AddToMemory(cBrainExperience& Exp)
+{
+  m_MemoryList.exp.append(&Exp);
+
+  QString fileName(WORKSPACE_PATH "/");
+  fileName.append(Obj.TimeStamp().toString("yyyymmdd_hhmmss"));
+  cJsonSerializer::QJsonToFile(Exp.toJson(), fileName);
 }
 //-----------------------------------------------------------------------------
 

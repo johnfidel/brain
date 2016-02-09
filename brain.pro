@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     Utils/JsonSerializer.cpp \
 \
     Settings/AppConfig.cpp \
-    EventHandler.cpp
+    EventHandler.cpp \
+    BrainLogic/BrainExperience.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -48,7 +49,8 @@ HEADERS += \
     EventHandler.h \
     Event.h \
     ModDefs.h \
-    BrainLogic/MemoryManager_Def.h
+    BrainLogic/MemoryManager_Def.h \
+    BrainLogic/BrainExperience.h
 
 DISTFILES += \
     qtbuild

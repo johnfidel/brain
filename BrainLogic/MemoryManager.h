@@ -21,6 +21,7 @@
 #include <QList>
 
 #include "BrainLogic/BrainObject.h"
+#include "BrainLogic/BrainExperience.h"
 #include "BrainLogic/MemoryManager_Def.h"
 
 class cMemoryManager : public QObject
@@ -32,8 +33,8 @@ class cMemoryManager : public QObject
     /// \brief stores short and long memory
     struct MemoryStructure
     {
-        QList<cBrainObject*> longMemory;
-        QList<cBrainObject*> shortMemory;
+        QList<cBrainObject*> mem;
+        QList<cBrainExperience*> exp;
     };
 
     /// \brief brain list of all memories
@@ -52,7 +53,10 @@ class cMemoryManager : public QObject
     ~cMemoryManager();
 
     /// \brief adds a object into list
-    void AddToShortMemory(cBrainObject& Obj);
+    void AddToMemory(cBrainObject&);
+
+    /// \brief adds a object into list
+    void AddToMemory(cBrainExperience&);
 
   public:
 
