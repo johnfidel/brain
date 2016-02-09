@@ -136,17 +136,33 @@ do_stuff()
       echo "go into $output_dir"
       cd $output_dir
     fi
+
     cmd="$QMAKE1 ../brain/$project_file $QMAKE2"
     echo "perform $cmd in directory $(pwd)"
-    $cmd
+
+    if [ -z $verbose ]; then
+      $cmd > /dev/zero
+    else
+      $cmd > /dev/zero
+    fi
 
     cmd=$CLEAN
     echo "perform $cmd"
-    $cmd
+
+    if [ -z $verbose ]; then
+      $cmd > /dev/zero
+    else
+      $cmd
+    fi
 
     cmd=$MAKE
     echo "perform $cmd"
-    $cmd
+
+    if [ -z $verbose ]; then
+      $cmd > /dev/zero
+    else
+      $cmd
+    fi
 
     #returning to initial dir
     cd $actualPath
