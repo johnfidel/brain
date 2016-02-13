@@ -1,9 +1,13 @@
 #include <QStringList>
+#include <QFile>
+#include <QDir>
+#include <QFileInfo>
 
 #include "MemoryManager.h"
 #include "BrainLogic/BrainObject.h"
 #include "BrainLogic/BrainExperience.h"
 #include "Utils/JsonSerializer.h"
+#include "Logging/Logger.h"
 
 //******************************************************************************
 // private functions
@@ -15,26 +19,48 @@
  * \param parent
  */
 cMemoryManager::cMemoryManager(QObject *parent) :
-  QObject(parent), m_ActualIndex(0)
-{
-
-}
+  QObject(parent)
+{ }
 //-----------------------------------------------------------------------------
 
 ///
 /// \brief cMemoryManager::~cMemoryManager
 ///
 cMemoryManager::~cMemoryManager()
+{ }
+//-----------------------------------------------------------------------------
+
+///
+/// \brief cMemoryManager::AddToMemory
+/// \param Obj
+///
+void cMemoryManager::AddToMemory(const cBrainObject &Obj)
 {
-  // clean up memnory
-  foreach (cBrainObject *obj, m_MemoryList.longMemory)
+  QString fileName(WORKSPACE_PATH);
+
+  fileName.append(Obj.Name().at(0));
+  fileName.append("/" + Obj.Name());
+
+  QFileInfo info(fileName);
+  if (!info.absoluteDir().exists())
   {
-    delete obj;
+    // create directory
+    info.absoluteDir().mkdir(info.absoluteDir().absolutePath());
   }
-  foreach (cBrainObject *obj, m_MemoryList.shortMemory)
-  {
-    delete obj;
-  }
+  // write file
+  cJsonSerializer::QJsonToFile(Obj.toJson(), fileName);
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief cMemoryManager::AddToMemory
+/// \param Obj
+///
+void cMemoryManager::AddToMemory(const cBrainExperience &Exp)
+{
+  QString fileName(WORKSPACE_PATH);
+  fileName.append(Exp.TimeStamp().toString("yyyymmdd_hhmmss"));
+  cJsonSerializer::QJsonToFile(Exp.toJson(), fileName);
 }
 //-----------------------------------------------------------------------------
 
@@ -61,58 +87,29 @@ cMemoryManager *cMemoryManager::Instance()
  * \brief cMemoryManager::AddToMemory
  * \param Text
  */
-void cMemoryManager::AddToMemory(const QString& Text)
+void cMemoryManager::AddToMemory(const QString &Text)
 {
   // check if this is a experience of a object
   if (Text.split(" ").count() > 1)
   {
-    cBrainExperience *pExp = new cBrainExperience(this);
+    // log programstard
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Create new ExperienceObject", LOGGING::LoggingLevelVerbose);
 
-    QStringList list = Text.split(" ");
-    foreach (QString str, list)
-    {
-      cBrainObject *obj = new cBrainObject(m_ActualIndex++, str, this);
-      pExp->AddObject(obj);
-    }
-    // ad to memory
-    AddToShortMemory(pExp);
+    // create experience object
+    cBrainExperience *pExp = new cBrainExperience(Text);
+    // add it to memory
+    AddToMemory(*pExp);
   }
   else
   {
+    // log programstard
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Create new BrainObject", LOGGING::LoggingLevelVerbose);
+
     // create new brainObject
-    cBrainObject *pObj = new cBrainObject(m_ActualIndex++, Text, this);
-
+    cBrainObject *pObj = new cBrainObject(Text);
     // add it to list of shortmemory
-    AddToShortMemory(*pObj);
+    AddToMemory(*pObj);
   }
-}
-//-----------------------------------------------------------------------------
-
-///
-/// \brief cMemoryManager::AddToMemory
-/// \param Obj
-///
-void cMemoryManager::AddToMemory(cBrainObject& Obj)
-{
-  m_MemoryList.mem.append(&Obj);
-
-  QString fileName(WORKSPACE_PATH "/" MEMORY_SHORT);
-  fileName.append(Obj.TimeStamp().toString("yyyymmdd_hhmmss"));
-  cJsonSerializer::QJsonToFile(Obj.toJson(), fileName);
-}
-//-----------------------------------------------------------------------------
-
-///
-/// \brief cMemoryManager::AddToMemory
-/// \param Obj
-///
-void cMemoryManager::AddToMemory(cBrainExperience& Exp)
-{
-  m_MemoryList.exp.append(&Exp);
-
-  QString fileName(WORKSPACE_PATH "/");
-  fileName.append(Obj.TimeStamp().toString("yyyymmdd_hhmmss"));
-  cJsonSerializer::QJsonToFile(Exp.toJson(), fileName);
 }
 //-----------------------------------------------------------------------------
 
@@ -121,13 +118,19 @@ void cMemoryManager::AddToMemory(cBrainExperience& Exp)
  */
 void cMemoryManager::ManageMemory()
 {
-  // try to create dependencies between memoryObjects
-  foreach (cBrainObject *obj, m_MemoryList.shortMemory)
+
+  QDir directory(WORKSPACE_PATH);
+
+  QStringList files(directory.entryList(QDir::Files));
+
+  // read next file
+  if (files.count() > 0)
   {
-    foreach (cBrainObject *compObj, m_MemoryList.shortMemory)
-    {
-      //if obj.Name()
-    }
+
+    // log
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("process " + files[0], LOGGING::LoggingLevelDebug);
+
+    cBrainExperience::fromJson(cJsonSerializer::QFileToJson(files[0]));
   }
 }
 //-----------------------------------------------------------------------------

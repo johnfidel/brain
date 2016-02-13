@@ -21,27 +21,36 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QDataStream>
+
 #include "JsonSerializer.h"
 
-/*!
- * \brief cJsonSerializer::cJsonSerializer
- * \param parent
- */
-QString cJsonSerializer::QJsonToString(const QJsonObject& obj)
-{
-  QJsonDocument doc(obj);
-  return QString(doc.toJson(QJsonDocument::Compact));
-}
+//***********************************************************************
+// private functions
+//
+
+//***********************************************************************
+// public functions
+//
 
 ///
-/// \brief cJsonSerializer::QStringToJson
-/// \param str
+/// \brief cJsonSerializer::FileToJson
+///         Wandelt eine json datei in ein Objekt um
+/// \param File
+/// \param obj
 /// \return
 ///
-QJsonObject cJsonSerializer::QStringToJson(const QString& str)
+QJsonObject cJsonSerializer::QFileToJson(const QString &File)
 {
-  return QJsonObject();
+  QFile jsonFile(File);
+  jsonFile.open(QFile::ReadOnly);
+
+  QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
+
+  jsonFile.close();
+
+  return doc.object();
 }
+//---------------------------------------------------------------------
 
 /*!
  * \brief cJsonSerializer::QJSonToFile
@@ -57,19 +66,18 @@ bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
   QJsonDocument doc(obj);
   QFile jsonFile(File);
 
-  QFileInfo *jsonFileInfo = new QFileInfo(jsonFile.fileName());
-  if (!jsonFileInfo->absoluteDir().exists())
+  QFileInfo info(jsonFile.fileName());
+  if (!info.absoluteDir().exists())
   {
-    jsonFileInfo->absoluteDir().mkpath(jsonFileInfo->absoluteDir().absolutePath());
+    info.absoluteDir().mkpath(info.absoluteDir().absolutePath());
   }
 
   jsonFile.open(QFile::ReadWrite);
   jsonFile.write(doc.toJson());
-
-  delete jsonFileInfo;
+  jsonFile.close();
 
   return false;
 }
-
+//---------------------------------------------------------------------
 
 

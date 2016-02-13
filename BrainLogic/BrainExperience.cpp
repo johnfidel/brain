@@ -3,9 +3,8 @@
 #include <algorithm>
 #include <QMap>
 #include <QJsonDocument>
-#include <QJsonObject>
 
-#include "BrainExperience.h"
+#include "BrainLogic/BrainExperience.h"
 
 //***********************************************************************
 // private functions
@@ -21,40 +20,60 @@
 ///
 cBrainExperience::cBrainExperience(QObject *parent) :
   QObject(parent)
+{
+  // save creation time
+  m_TimeStamp = QDateTime::currentDateTime();
+}
+//------------------------------------------------------------------------
+
+///
+/// \brief cBrainObject::cBrainObject
+/// \param name
+/// \param langId
+///
+cBrainExperience::cBrainExperience(const QString &experience, QObject *parent) :
+  QObject(parent)
+{
+  // save creation time
+  m_TimeStamp = QDateTime::currentDateTime();
+  m_Experience = experience;
+}
+//------------------------------------------------------------------------
+
+///
+/// \brief cBrainObject::~cBrainObject
+///
+cBrainExperience::~cBrainExperience()
 { }
 //------------------------------------------------------------------------
 
-/*!
- * \brief cBrainExperience::~cBrainExperience
- */
-cBrainExperience::~cBrainExperience()
-{
-
-}
-//------------------------------------------------------------------------
-
-/*!
- * \brief cBrainExperience::toJson
- * \return
- */
+///
+/// \brief cBrainObject::toJson
+/// \return
+///
 QJsonObject cBrainExperience::toJson() const
 {
-  QJsonDocument tmp;
+  QJsonObject tmp;
 
-  foreach (cBrainObject *obj, Experience())
-  {
+  // append all properties to json object
+  tmp.insert("m_TimeStamp", QJsonValue(m_TimeStamp.toString()));
+  tmp.insert("m_Experience", QJsonValue(m_Experience));
 
-  }
+  return tmp;
 }
 //------------------------------------------------------------------------
 
-/*!
- * \brief cBrainExperience::fromString
- * \param string
- * \return
- */
-cBrainObject cBrainExperience::fromString(const QString& string)
+///
+/// \brief cBrainObject::fromString
+/// \param string
+/// \return
+///
+cBrainExperience cBrainExperience::fromJson(const QJsonObject &obj)
 {
+  QJsonArray jsonArray = obj["properties"].toArray();
 
+
+
+//  //return cBrainObject();
 }
 //------------------------------------------------------------------------

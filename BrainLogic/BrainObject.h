@@ -1,5 +1,5 @@
 /**
-* @file                     BrainObject.cpp
+* @file                     BrainObject.h
 * @author                   RPi
 * @date                     04.01.2016
 * @brief                    This class describes a known object to the brain.
@@ -28,7 +28,6 @@ class cBrainObject : public QObject
   Q_OBJECT
 private:
 
-  int m_id;
   QString m_Name;
   //QImage *m_pImage;
   QDateTime m_TimeStamp;
@@ -37,25 +36,14 @@ public:
 
   /// \brief standard ctor
   explicit cBrainObject(QObject *parent = 0);
-  /// \brief copyconstructor
-  explicit cBrainObject(const cBrainObject &obj);
-  /// \brief operator =
-  cBrainObject operator=(const cBrainObject&);
 
   /// \brief destructor
   ~cBrainObject();
 
   /// \brief Special constructor
-  explicit cBrainObject(const QString name, QObject *parent = 0);
-
-  /// \brief Special constructor
-  explicit cBrainObject(const int idx, const QString name, QObject *parent = 0);
-
-  /// \brief adds an image for the object
-  void AddImage(const QImage&);
+  explicit cBrainObject(const QString &name, QObject *parent = 0);
 
   /// \brief Getter and setter
-  int Id() const { return m_id; }
   QString Name() const { return m_Name; }
   //QImage Image() const { return *m_pImage; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
@@ -64,7 +52,7 @@ public:
   QJsonObject toJson() const;
 
   /// \brief converst a JSon string into a cBrainObject
-  cBrainObject fromString(const QString&);
+  cBrainObject fromJson(const QJsonObject &);
 
 signals:
 

@@ -23,6 +23,9 @@ void cCoreState::run()
   CoreStateEnum state = (CoreStateEnum)0;
   EVENTS::cEvent event;
 
+  // log programstard
+  LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Enter cCoreState thread", LOGGING::LoggingLevelVerbose);
+
   while (isRunning())
   {
     QThread::msleep(20);
@@ -52,7 +55,7 @@ void cCoreState::run()
       case HandleConsoleInput:
       {
         // log incoming input
-        LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelInfo);
+        LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelVerbose);
         // Create new memoryentry
         m_pMemoryManager->AddToMemory(event.Text());
 

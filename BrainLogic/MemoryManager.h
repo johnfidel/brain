@@ -30,19 +30,6 @@ class cMemoryManager : public QObject
 
   private :
 
-    /// \brief stores short and long memory
-    struct MemoryStructure
-    {
-        QList<cBrainObject*> mem;
-        QList<cBrainExperience*> exp;
-    };
-
-    /// \brief brain list of all memories
-    MemoryStructure m_MemoryList;
-
-    /// \brief The index of the MemoryEntry
-    int m_ActualIndex;
-
     /// \brief instance holder
     static cMemoryManager *m_pInstance;
 
@@ -53,10 +40,10 @@ class cMemoryManager : public QObject
     ~cMemoryManager();
 
     /// \brief adds a object into list
-    void AddToMemory(cBrainObject&);
+    void AddToMemory(const cBrainObject &);
 
     /// \brief adds a object into list
-    void AddToMemory(cBrainExperience&);
+    void AddToMemory(const cBrainExperience &);
 
   public:
 
@@ -64,7 +51,7 @@ class cMemoryManager : public QObject
     static cMemoryManager *Instance();
 
     /// \brief adds a object into list
-    void AddToMemory(const QString& Text);
+    void AddToMemory(const QString &Text);
 
     /// \brief Does some sorting and analysing work on memory
     void ManageMemory();
