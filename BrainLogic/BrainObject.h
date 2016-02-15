@@ -45,14 +45,16 @@ public:
 
   /// \brief Getter and setter
   QString Name() const { return m_Name; }
+  void Name(const QString value) { m_Name = value; }
   //QImage Image() const { return *m_pImage; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
+  void TimeStamp(const QDateTime &value) { m_TimeStamp = value; }
 
   /// \brief converts class into JSON object
   QJsonObject toJson() const;
 
   /// \brief converst a JSon string into a cBrainObject
-  cBrainObject fromJson(const QJsonObject &);
+  static cBrainObject* fromJson(const QJsonObject &);
 
 signals:
 

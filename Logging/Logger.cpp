@@ -20,7 +20,7 @@ namespace LOGGING
   ///
   cLogger::cLogger(QObject *parent) :
     QObject(parent), m_LoggingOutput((LoggingOutput)1),
-    m_SocketList(), m_pServerSocket(0)
+    m_pServerSocket(0), m_SocketList()
   {
 
   }

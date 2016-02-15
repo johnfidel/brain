@@ -16,26 +16,32 @@ SOURCES += main.cpp \
     BrainLogic/BrainObject.cpp \
     BrainLogic/CoreState.cpp \
     BrainLogic/MemoryManager.cpp \
+    BrainLogic/BrainExperience.cpp \
+    BrainLogic/BrainNeurone.cpp \
 \
     IOSystem/Input/Eye/WebCam/WebCam.cpp \
     IOSystem/Input/Console/TextReader.cpp \
+    IOSystem/Output/Console/TextWriter.cpp \
 \
     Logging/Logger.cpp \
 \
     Utils/JsonSerializer.cpp \
 \
     Settings/AppConfig.cpp \
-    EventHandler.cpp \
-    BrainLogic/BrainExperience.cpp
+    EventHandler.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
     BrainLogic/CoreState.h \
     BrainLogic/MemoryManager.h \
+    BrainLogic/MemoryManager_Def.h \
+    BrainLogic/BrainExperience.h \
+    BrainLogic/BrainNeurone.h \
 \
     IOSystem/Input/Eye/WebCam/WebCam.h \
     IOSystem/Input/Console/TextReader.h \
-    IOSystem/Input/InputInterface.h \
+    IOSystem/Output/Console/TextWriter.h \
+    IOSystem/IOInterface.h \
 \
     Logging/Logger.h \
     Logging/LogMessage.h \
@@ -49,8 +55,7 @@ HEADERS += \
     EventHandler.h \
     Event.h \
     ModDefs.h \
-    BrainLogic/MemoryManager_Def.h \
-    BrainLogic/BrainExperience.h
+    EventInterface.h
 
 DISTFILES += \
     qtbuild

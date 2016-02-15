@@ -84,6 +84,44 @@ cMemoryManager *cMemoryManager::Instance()
 //-----------------------------------------------------------------------------
 
 /*!
+ * \brief cBrainExperience::SearchInMemory
+ * \param str
+ * \return
+ */
+bool cMemoryManager::SearchInMemory(const QString &search)
+{
+
+  bool result = false;
+
+  foreach (QString word, search.split(" "))
+  {
+    // parse alphabetical hierarchy
+    QDir directory(QString(WORKSPACE_PATH) + word.at(0) + "/" + word);
+
+    // search for actual word
+    QFileInfoList files(directory.entryInfoList(QDir::Files));
+
+    // log
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("search for " + word + "in " + directory.absolutePath(), LOGGING::LoggingLevelDebug);
+
+    // read files
+    foreach (QFileInfo info, files)
+    {
+      if (info.fileName() == word)
+      {
+        cBrainNeurone *pNeurone = new cBrainNeurone(cBrainObject::fromJson(cJsonSerializer::QFileToJson(info.absoluteFilePath())));
+        emit Event(EVENTS::cEvent(pNeurone));
+        result = true;
+        return result;
+      }
+    }
+  }
+
+  return result;
+}
+//-----------------------------------------------------------------------------
+
+/*!
  * \brief cMemoryManager::AddToMemory
  * \param Text
  */
@@ -92,7 +130,7 @@ void cMemoryManager::AddToMemory(const QString &Text)
   // check if this is a experience of a object
   if (Text.split(" ").count() > 1)
   {
-    // log programstard
+    // log
     LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Create new ExperienceObject", LOGGING::LoggingLevelVerbose);
 
     // create experience object
@@ -102,7 +140,7 @@ void cMemoryManager::AddToMemory(const QString &Text)
   }
   else
   {
-    // log programstard
+    // log
     LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Create new BrainObject", LOGGING::LoggingLevelVerbose);
 
     // create new brainObject
@@ -142,15 +180,14 @@ void cMemoryManager::ManageMemory()
 
       if (parseDir.exists())
       {
-        QStringList objects = parseDir.entryList(QStringList(str), QDir::Files);
+        QFileInfoList objects = parseDir.entryInfoList(QStringList(str), QDir::Dirs);
         if (objects.count() > 0)
         {
-          //QFile::rename(files.at(0) )
+          QString newPath = objects.at(0).absolutePath() + "/" + str + "/" + files[0].fileName();
+          directory.rename(files.at(0).absoluteFilePath(), newPath);
         }
       }
     }
-
-
 
     // deallocate memory
     delete pExp;

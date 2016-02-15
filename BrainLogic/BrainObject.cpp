@@ -75,7 +75,13 @@ QJsonObject cBrainObject::toJson() const
 /// \param string
 /// \return
 ///
-cBrainObject cBrainObject::fromJson(const QJsonObject &obj)
+cBrainObject* cBrainObject::fromJson(const QJsonObject &jobj)
 {
+
+  cBrainObject *obj = new cBrainObject();
+  obj->Name(jobj["m_Name"].toString());
+  obj->TimeStamp(QDateTime::fromString(jobj["m_TimeStamp"].toString()));
+
+  return obj;
 }
 //------------------------------------------------------------------------

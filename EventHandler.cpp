@@ -1,5 +1,5 @@
 #include "EventHandler.h"
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 
 //*****************************************************************************
 // Private functions
@@ -38,12 +38,13 @@ EVENTS::cEventHandler* EVENTS::cEventHandler::Instance()
 /// \param pThread
 /// \return
 ///
-bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
+bool EVENTS::cEventHandler::RegisterEvent(EVENT::IEventInterface *pEvent)
 {
 
-  if (pThread != 0)
+  if (pEvent != 0)
   {
-    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)));
+    QObject::connect(dynamic_cast<QObject*>(pEvent), SIGNAL(Event(EVENTS::cEvent)),
+                                                     this, SLOT(OnEvent(EVENTS::cEvent)));
   }
 
   return true;

@@ -19,6 +19,11 @@
 
 #include <QObject>
 #include <QThread>
+#include <QList>
+
+#include "BrainLogic/BrainObject.h"
+#include "BrainLogic/BrainExperience.h"
+#include "BrainLogic/BrainNeurone.h"
 
 namespace EVENTS
 {
@@ -28,10 +33,11 @@ namespace EVENTS
 
     public:
 
-      enum UserEventEnum
+      enum EventEnum
       {
-        Invalid = 0,
-        ConsoleInput
+        Event_Invalid = 0,
+        Event_ConsoleInput,
+        Event_BrainNeuroneFound,
       };
 
     private:
@@ -40,8 +46,10 @@ namespace EVENTS
        * \brief eUserEventId
        *        this field stores the ID of event
        */
-      UserEventEnum m_eUserEventId;
+      EventEnum m_eEventId;
       QString m_text;
+      cBrainObject *m_pBrainObject;
+      cBrainNeurone *m_pBrainNeurone;
 
     public:
 
@@ -51,8 +59,11 @@ namespace EVENTS
        */
       void initData()
       {
-         m_eUserEventId = (UserEventEnum)0;
+         m_eEventId = (EventEnum)0;
          m_text = QString("");
+
+         m_pBrainObject = NULL;
+         m_pBrainNeurone = NULL;
       }
 
       /*!
@@ -61,6 +72,21 @@ namespace EVENTS
        */
       cEvent() {}
 
+      /// \brief destruktor
+      ~cEvent()
+      {
+        if (m_pBrainNeurone)
+        {
+          delete m_pBrainNeurone;
+          m_pBrainNeurone = NULL;
+        }
+        if (m_pBrainObject)
+        {
+          delete m_pBrainObject;
+          m_pBrainObject = NULL;
+        }
+      }
+
       /*!
        * \brief cEvent
        *        Copyconstructor
@@ -68,7 +94,12 @@ namespace EVENTS
        */
       cEvent(const cEvent& event)
       {
-        *this = event;
+        initData();
+
+        m_eEventId = event.m_eEventId;
+        m_text = event.m_text;
+        m_pBrainNeurone = event.BrainNeurone();
+        m_pBrainObject = event.BrainObject();
       }
 
       /*!
@@ -77,28 +108,43 @@ namespace EVENTS
        * \param id
        * \param text
        */
-      cEvent(const UserEventEnum id, QString text = "")
+      cEvent(const EventEnum id, QString text = "")
       {
-        m_eUserEventId = id;
+        initData();
+
+        m_eEventId = id;
         m_text = QString(text);
       }
 
       /*!
-       * \brief operator =
-       *        Set operator
+       * \brief cEvent
        * \param obj
-       * \return
        */
-      cEvent& operator=(const cEvent& obj)
+      cEvent(cBrainObject *pObj)
       {
-        m_eUserEventId = obj.m_eUserEventId;
-        m_text = obj.m_text;
-        return *this;
+        initData();
+
+        m_eEventId = Event_BrainNeuroneFound;
+        m_pBrainObject = pObj;
+      }
+
+      /*!
+       * \brief cEvent
+       * \param pNeurone
+       */
+      cEvent(cBrainNeurone *pNeurone)
+      {
+        initData();
+
+        m_eEventId = Event_BrainNeuroneFound;
+        m_pBrainNeurone = pNeurone;
       }
 
       /// \brief Getter and Setter for local variables
-      UserEventEnum UserEventId() const { return m_eUserEventId; }
+      EventEnum EventId() const { return m_eEventId; }
       QString Text() const { return m_text; }
+      cBrainObject *BrainObject() const { return m_pBrainObject; }
+      cBrainNeurone *BrainNeurone() const { return m_pBrainNeurone; }
 
     signals:
 

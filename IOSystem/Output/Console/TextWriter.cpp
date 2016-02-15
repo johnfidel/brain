@@ -3,38 +3,30 @@
 #include <QTextStream>
 
 #include "IOSystem/IOInterface.h"
-#include "TextReader.h"
+#include "IOSystem/Output/Console/TextWriter.h"
 
 //********************************************************************************
 // private constants
 //
-const QString INPUT::cTextReader::CONSOLE_PROMPT = "brain: ";
 
 //********************************************************************************
 // private functions
 //
 
-//--------------------------------------------------------------------------------
-// main function
-void INPUT::cTextReader::run()
+/*!
+ * \brief OUTPUT::cTextWriter::run
+ */
+void OUTPUT::cTextWriter::run()
 {
-  QTextStream in(stdin);
   QTextStream out(stdout, QIODevice::WriteOnly);
-
-  // output default string
-  out << CONSOLE_PROMPT << endl;
 
   while (true)
   {
     QThread::msleep(20);
 
-    QString entry = in.readLine();
-    out << CONSOLE_PROMPT << endl;
+    //out <<
 
-    if (entry != "")
-    {
-      emit Event(EVENTS::cEvent(EVENTS::cEvent::Event_ConsoleInput, entry));
-    }
+
   }
 }
 
@@ -42,10 +34,21 @@ void INPUT::cTextReader::run()
 // public functions
 //
 
-//--------------------------------------------------------------------------------
-// ctor
-INPUT::cTextReader::cTextReader(QObject *parent) :
+/*!
+ * \brief OUTPUT::cTextWriter::cTextWriter
+ * \param parent
+ */
+OUTPUT::cTextWriter::cTextWriter(QObject *parent) :
     cIOInterface(parent)
+{
+
+}
+//--------------------------------------------------------------------------------
+
+/*!
+ * \brief OUTPUT::cTextWriter::OnEvent
+ */
+void OUTPUT::cTextWriter::OnEvent(const EVENTS::cEvent &)
 {
 
 }
