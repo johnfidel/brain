@@ -21,7 +21,9 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QDataStream>
+#include <QDebug>
 
+#include "Logging/Logger.h"
 #include "JsonSerializer.h"
 
 //***********************************************************************
@@ -42,10 +44,13 @@
 QJsonObject cJsonSerializer::QFileToJson(const QString &File)
 {
   QFile jsonFile(File);
-  jsonFile.open(QFile::ReadOnly);
+  if (!jsonFile.open(QFile::ReadOnly | QIODevice::Text))
+  {
+    // log programstard
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Cant open file: " + File, LOGGING::LoggingLevelDebug);
 
+  }
   QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
-
   jsonFile.close();
 
   return doc.object();

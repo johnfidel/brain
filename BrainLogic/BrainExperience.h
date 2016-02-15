@@ -48,13 +48,15 @@ public:
 
   /// \brief Getter and setter
   QString Experience() const { return m_Experience; }
+  void Experience(const QString &value) { m_Experience = value; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
+  void TimeStamp(const QDateTime &value) { m_TimeStamp = value; }
 
   /// \brief converts class into JSON object
   QJsonObject toJson() const;
 
   /// \brief converst a JSon string into a cBrainObject
-  static cBrainExperience fromJson(const QJsonObject &);
+  static cBrainExperience* fromJson(const QJsonObject &);
 
 signals:
 

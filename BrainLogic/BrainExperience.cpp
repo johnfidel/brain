@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <QMap>
 #include <QJsonDocument>
+#include <QDateTime>
 
 #include "BrainLogic/BrainExperience.h"
 
@@ -68,12 +69,13 @@ QJsonObject cBrainExperience::toJson() const
 /// \param string
 /// \return
 ///
-cBrainExperience cBrainExperience::fromJson(const QJsonObject &obj)
+cBrainExperience* cBrainExperience::fromJson(const QJsonObject &obj)
 {
-  QJsonArray jsonArray = obj["properties"].toArray();
 
+  cBrainExperience *exp = new cBrainExperience();
+  exp->Experience(obj["m_Experience"].toString());
+  exp->TimeStamp(QDateTime::fromString(obj["m_TimeStamp"].toString()));
 
-
-//  //return cBrainObject();
+  return exp;
 }
 //------------------------------------------------------------------------

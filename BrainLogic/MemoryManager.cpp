@@ -38,8 +38,8 @@ void cMemoryManager::AddToMemory(const cBrainObject &Obj)
 {
   QString fileName(WORKSPACE_PATH);
 
-  fileName.append(Obj.Name().at(0));
-  fileName.append("/" + Obj.Name());
+  fileName.append(Obj.Name().at(0).toUpper());
+  fileName.append("/" + Obj.Name() + "/" + Obj.Name());
 
   QFileInfo info(fileName);
   if (!info.absoluteDir().exists())
@@ -121,16 +121,39 @@ void cMemoryManager::ManageMemory()
 
   QDir directory(WORKSPACE_PATH);
 
-  QStringList files(directory.entryList(QDir::Files));
+  QFileInfoList files(directory.entryInfoList(QDir::Files));
 
   // read next file
   if (files.count() > 0)
   {
 
     // log
-    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("process " + files[0], LOGGING::LoggingLevelDebug);
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("process " + files[0].fileName(), LOGGING::LoggingLevelDebug);
 
-    cBrainExperience::fromJson(cJsonSerializer::QFileToJson(files[0]));
+    // read experience object
+    cBrainExperience *pExp = cBrainExperience::fromJson(cJsonSerializer::QFileToJson(files[0].absoluteFilePath()));
+
+    // now check if one of the brain objects is contained in the experience
+    foreach (QString str, pExp->Experience().split(' '))
+    {
+      QString firstLetter = str.at(0).toUpper();
+
+      QDir parseDir(directory.absolutePath() + "/" + firstLetter);
+
+      if (parseDir.exists())
+      {
+        QStringList objects = parseDir.entryList(QStringList(str), QDir::Files);
+        if (objects.count() > 0)
+        {
+          //QFile::rename(files.at(0) )
+        }
+      }
+    }
+
+
+
+    // deallocate memory
+    delete pExp;
   }
 }
 //-----------------------------------------------------------------------------
