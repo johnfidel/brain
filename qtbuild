@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # -----------------------------------
 # author:	johnfidel
@@ -11,8 +11,8 @@ version="1.0"
 
 #local variables
 CONFIG_FILE=".qtbuild_config"
-QT_VERSION="5.5"
-PLATFORM_SPEC="-r -spec linux-g++-32"
+QT_VERSION="5.6"
+PLATFORM_SPEC="-r -spec linux-g++"
 BUILD_CONFIG="CONFIG+=release"
 
 print_version()
@@ -54,7 +54,7 @@ Prerequisites()
 {
   echo "look for mlocate..."
   if [ -z $(which mlocate) ]; then
-    echo "mlocate is not installed. Try apt-get install mlocat"
+    echo "mlocate is not installed. Try apt-get install mlocate"
     exit 1
   fi
   
@@ -62,8 +62,11 @@ Prerequisites()
   qtpath=$(mlocate Qt/$QT_VERSION -n 1)
   if [ -n "$qtpath" ]; then
     QT_PATH=$qtpath
+    echo "found Qt at: $QT_PATH"
+  else
+    echo "Qt installation dir not found."
+    echo "Try sudo updatedb and reexecute this script."
   fi
-
 
   #check make
   echo "look for make..."
@@ -73,8 +76,15 @@ Prerequisites()
   fi
 
   #check qmake
-  echo "use $($QT_PATH/gcc/bin/qmake -v)"
-
+  architecture=$(uname -i)
+  if [ "$architecture" == "x86_64" ]; then
+    QMAKE_ARCH_PATH=gcc_64/bin
+  else
+    QMAKE_ARCH_PATH=gcc/bin
+    PLATFORM_SPEC+="-32"
+  fi
+  echo "use $($QT_PATH/$QMAKE_ARCH_PATH/qmake -v)"
+  
   # get nr of cpu
   nrofcpu=$(nproc)
   if [ $nrofcpu -ge 2 ]; then
@@ -86,7 +96,7 @@ Prerequisites()
   fi
 
   # first line of config file
-  echo "$QT_PATH/gcc/bin/qmake" > $CONFIG_FILE
+  echo "$QT_PATH/$QMAKE_ARCH_PATH/qmake" > $CONFIG_FILE
   echo "$PLATFORM_SPEC $BUILD_CONFIG" >> $CONFIG_FILE
   echo "make clean $NR_OF_CPU" >> $CONFIG_FILE
   echo "make $NR_OF_CPU" >> $CONFIG_FILE
