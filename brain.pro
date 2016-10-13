@@ -1,5 +1,5 @@
 QT += core
-QT += multimedia
+QT += multimedia multimediawidgets
 QT -= gui
 QT += network
 QT += websockets
@@ -7,6 +7,8 @@ QT += websockets
 TARGET = brain
 CONFIG += console
 CONFIG -= app_bundle
+
+INCLUDEPATH += /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
 
 TEMPLATE = app
 

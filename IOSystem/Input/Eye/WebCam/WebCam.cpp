@@ -24,8 +24,12 @@
 cWebCam::cWebCam()
 {
 
-  QCamera myCamera;
+  QCamera Cam;
+  QCameraInfo myCamera;
   QCameraInfo cameraInfo(myCamera);
+
+  myCamera = QCameraInfo::defaultCamera();
+  qDebug() << myCamera.deviceName();
 
   QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
   foreach (const QCameraInfo &cameraInfo, cameras)

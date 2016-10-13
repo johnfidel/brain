@@ -9,6 +9,7 @@
 #include "BrainLogic/CoreState.h"
 #include "Logging/Logger.h"
 #include "Logging/LogMessage.h"
+#include "IOSystem/Input/Eye/WebCam/WebCam.h"
 
 void getLoggingConfiguration()
 { 
@@ -39,7 +40,9 @@ int main(int argc, char *argv[])
 
   initApplication(&App);
 
-  // create mainthread
+  cWebCam webcam;
+
+  // create mainthread  
   cCoreState BrainCore(&App);
   BrainCore.start();
 
