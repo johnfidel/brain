@@ -25,6 +25,7 @@
 #include "Event.h"
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
+#include "IOSystem/Input/Ears/AudioIn.h"
 #include "Settings/AppConfig.h"
 #include "MemoryManager.h"
 
@@ -61,6 +62,9 @@ class cCoreState : public QThread
 
     /// \brief Console input
     INPUT::cTextReader m_TextReader;
+
+    /// \brief Ears to listen audio
+    INPUT::cAudioIn m_Ears;
 
     /// \brief Reimplementation of function run() of QThread
     void run();
