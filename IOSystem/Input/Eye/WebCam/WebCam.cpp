@@ -16,26 +16,62 @@
 *-------------------------------------------------------------------------------
 */
 #include "WebCam.h"
+#include "View/MainView.h"
 
-/*!
- * \brief cWebCam::cWebCam
- *        standardconstructor of class
- */
-cWebCam::cWebCam()
+#include <QAction>
+#include <QCameraImageCapture>
+#include <QCameraViewfinder>
+
+//-------------------------------------------------------------------
+//
+cWebCam::cWebCam(QObject *parent) : QObject(parent)
 {
+  m_camera = new QCamera(QCameraInfo::defaultCamera());
 
-  QCamera myCamera;
-  QCameraInfo cameraInfo(myCamera);
+  m_ImageCapturer = new QCameraImageCapture(m_camera);
 
-  QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-  foreach (const QCameraInfo &cameraInfo, cameras)
-      qDebug() << cameraInfo.deviceName();
+  connect(m_ImageCapturer, SIGNAL(readyForCaptureChanged(bool)), this, SLOT(readyForCapture(bool)));
+  connect(m_ImageCapturer, SIGNAL(imageCaptured(int,QImage)), this, SLOT(processCapturedImage(int,QImage)));
+  connect(m_ImageCapturer, SIGNAL(imageSaved(int,QString)), this, SLOT(imageSaved(int,QString)));
+  connect(m_ImageCapturer, SIGNAL(error(int,QCameraImageCapture::Error,QString)), this,
+          SLOT(displayCaptureError(int,QCameraImageCapture::Error,QString)));
 
-  if (cameraInfo.position() == QCamera::FrontFace)
-      qDebug() << "The camera is on the front face of the hardware system.";
-  else if (cameraInfo.position() == QCamera::BackFace)
-      qDebug() << "The camera is on the back face of the hardware system.";
+}
 
-  qDebug() << "The camera sensor orientation is " << cameraInfo.orientation() << " degrees.";
+//-------------------------------------------------------------------
+//
+void cWebCam::setViewFinder(QCameraViewfinder *pViewFinder)
+{
+  m_camera->setViewfinder(pViewFinder);
+
+  m_camera->start();
+}
+
+//-------------------------------------------------------------------
+//
+void cWebCam::readyForCapture(bool ready)
+{
+}
+
+//-------------------------------------------------------------------
+//
+void cWebCam::processCapturedImage(int requestId, const QImage& img)
+{
+    Q_UNUSED(requestId);
+    QImage scaledImage = img.scaled(m_camera->viewfinderSettings().resolution(),
+                                    Qt::KeepAspectRatio,
+                                    Qt::SmoothTransformation);
+
+
+}
+
+//-------------------------------------------------------------------
+//
+void cWebCam::imageSaved(int id, const QString &fileName)
+{    
+}
+
+void cWebCam::displayCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString)
+{
 
 }

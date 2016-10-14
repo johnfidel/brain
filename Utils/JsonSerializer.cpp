@@ -35,7 +35,7 @@ QString cJsonSerializer::QJsonToString(const QJsonObject& obj)
 /// \param str
 /// \return
 ///
-QJsonObject cJsonSerializer::QStringToJson(const QString& str)
+QJsonObject cJsonSerializer::QStringToJson(const QString&)
 {
   return QJsonObject();
 }
@@ -49,7 +49,7 @@ QJsonObject cJsonSerializer::QStringToJson(const QString& str)
  *        the filename
  * \return
  */
-bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
+bool cJsonSerializer::QJsonToFile(const QJsonObject &, const QString &)
 {
 
   return false;
