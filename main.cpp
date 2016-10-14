@@ -9,8 +9,6 @@
 #include "BrainLogic/CoreState.h"
 #include "Logging/Logger.h"
 #include "Logging/LogMessage.h"
-#include "View/MainView.h"
-#include "IOSystem/Input/Eye/WebCam/WebCam.h"
 
 void getLoggingConfiguration()
 { 
@@ -42,7 +40,7 @@ int main(int argc, char *argv[])
   initApplication(&App);
 
   // create mainthread  
-  cCoreState BrainCore(&App);
+  cCoreState BrainCore;
   BrainCore.start();
 
   // close event
@@ -50,13 +48,6 @@ int main(int argc, char *argv[])
 
   // log programstard
   LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Application started", LOGGING::LoggingLevelInfo);
-
-  MainWindow w;
-  w.show();
-  cMainViewModel *mainViewModel = new cMainViewModel();
-  w.setModel(*mainViewModel);
-  cWebCam webcam;
-  webcam.setViewFinder(mainViewModel->getViewFinder());
 
   // mainloop
   return App.exec();

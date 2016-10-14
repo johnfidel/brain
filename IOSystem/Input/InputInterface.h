@@ -58,6 +58,11 @@ namespace INPUT
 
     public slots:
 
+      ///
+      /// \brief OnEvent
+      /// Event that each Inputinterface can receive
+      virtual void OnEvent(const EVENTS::cEvent&) {}
+
   };
 
 } // namespace INPUT

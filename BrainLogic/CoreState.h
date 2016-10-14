@@ -25,9 +25,14 @@
 #include "Event.h"
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
+#include "IOSystem/Input/Eye/cEye.h"
 #include "IOSystem/Input/Ears/AudioIn.h"
 #include "Settings/AppConfig.h"
 #include "MemoryManager.h"
+#ifdef USE_GUI
+#include "View/MainView.h"
+#include "View/MainViewModel.h"
+#endif //USE_GUI
 
 class cCoreState : public QThread
 {
@@ -45,6 +50,11 @@ class cCoreState : public QThread
     /// \brief stores the mainstate of core thread
     CoreStateEnum m_eMainState;
 
+#ifdef USE_GUI
+    MainWindow m_GUI;
+    cMainViewModel *m_pMainViewModel;
+#endif //USEGUI
+
     /// \brief mutex for thread safety
     QMutex m_Mutex;
 
@@ -61,7 +71,10 @@ class cCoreState : public QThread
     cMemoryManager *m_pMemoryManager;
 
     /// \brief Console input
-    INPUT::cTextReader m_TextReader;
+    INPUT::cTextReader *m_pTextReader;
+
+    /// \brief Eyes to look around
+    INPUT::cEye *m_pEye;
 
     /// \brief Ears to listen audio
     INPUT::cAudioIn m_Ears;
@@ -78,6 +91,11 @@ class cCoreState : public QThread
     ~cCoreState();
 
   signals:
+
+    ///
+    /// \brief Event
+    ///
+    void Event(const EVENTS::cEvent &);
 
   public slots:
 

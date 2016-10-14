@@ -16,10 +16,11 @@ SOURCES += main.cpp \
     BrainLogic/CoreState.cpp \
     BrainLogic/MemoryManager.cpp \
 \
-    IOSystem/Input/Eye/WebCam/WebCam.cpp \
     IOSystem/Input/Console/TextReader.cpp \
     IOSystem/Input/Ears/AudioIn.cpp \
     IOSystem/Input/Ears/AudioFileHandler.cpp \
+\
+    Drivers/WebCam/WebCam.cpp \
 \
     Logging/Logger.cpp \
 \
@@ -28,18 +29,20 @@ SOURCES += main.cpp \
     Settings/AppConfig.cpp \
     EventHandler.cpp \
     View/MainView.cpp \
-    View/MainViewModel.cpp
+    View/MainViewModel.cpp \
+    IOSystem/Input/Eye/cEye.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
     BrainLogic/CoreState.h \
     BrainLogic/MemoryManager.h \
 \
-    IOSystem/Input/Eye/WebCam/WebCam.h \
     IOSystem/Input/Console/TextReader.h \
     IOSystem/Input/InputInterface.h \
     IOSystem/Input/Ears/AudioIn.h \
     IOSystem/Input/Ears/AudioFileHandler.h \
+\
+    Drivers/WebCam/WebCam.h \
 \
     Logging/Logger.h \
     Logging/LogMessage.h \
@@ -54,7 +57,8 @@ HEADERS += \
     Event.h \
     ModDefs.h \
     View/MainView.h \
-    View/MainViewModel.h
+    View/MainViewModel.h \
+    IOSystem/Input/Eye/cEye.h
 
 DISTFILES += \
     qtbuild
