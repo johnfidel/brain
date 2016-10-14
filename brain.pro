@@ -1,12 +1,13 @@
-QT += core
-QT += multimedia
-QT -= gui
+QT += core gui
+QT += multimedia multimediawidgets
 QT += network
 QT += websockets
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 TARGET = brain
-CONFIG += console
 CONFIG -= app_bundle
+CONFIG += console
 
 TEMPLATE = app
 
@@ -23,7 +24,8 @@ SOURCES += main.cpp \
     Utils/JsonSerializer.cpp \
 \
     Settings/AppConfig.cpp \
-    EventHandler.cpp
+    EventHandler.cpp \
+    View/MainWindow.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -45,8 +47,12 @@ HEADERS += \
     GenDefs.h \
     EventHandler.h \
     Event.h \
-    ModDefs.h
+    ModDefs.h \
+    View/MainWindow.h
 
 DISTFILES += \
     qtbuild
+
+FORMS += \
+    View/MainWindow.ui
 
