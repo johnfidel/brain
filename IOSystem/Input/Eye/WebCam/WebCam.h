@@ -11,6 +11,7 @@
 
 class cWebCam : public QObject
 {
+  Q_OBJECT
 
   private:
     QCamera *m_camera;
@@ -28,6 +29,34 @@ class cWebCam : public QObject
   signals:
 
   public slots:
+
+    ///
+    /// \brief readyForCapture
+    /// \param ready
+    ///
+    void readyForCapture(bool ready);
+
+    ///
+    /// \brief processCapturedImage
+    /// \param requestId
+    /// \param img
+    ///
+    void processCapturedImage(int requestId, const QImage& img);
+
+    ///
+    /// \brief imageSaved
+    /// \param id
+    /// \param fileName
+    ///
+    void imageSaved(int id, const QString &fileName);
+
+    ///
+    /// \brief displayCaptureError
+    /// \param id
+    /// \param error
+    /// \param errorString
+    ///
+    void displayCaptureError(int id, const QCameraImageCapture::Error error, const QString &errorString);
 
 };
 
