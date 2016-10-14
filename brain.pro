@@ -18,6 +18,8 @@ SOURCES += main.cpp \
 \
     IOSystem/Input/Eye/WebCam/WebCam.cpp \
     IOSystem/Input/Console/TextReader.cpp \
+    IOSystem/Input/Ears/AudioIn.cpp \
+    IOSystem/Input/Ears/AudioFileHandler.cpp \
 \
     Logging/Logger.cpp \
 \
@@ -36,6 +38,8 @@ HEADERS += \
     IOSystem/Input/Eye/WebCam/WebCam.h \
     IOSystem/Input/Console/TextReader.h \
     IOSystem/Input/InputInterface.h \
+    IOSystem/Input/Ears/AudioIn.h \
+    IOSystem/Input/Ears/AudioFileHandler.h \
 \
     Logging/Logger.h \
     Logging/LogMessage.h \

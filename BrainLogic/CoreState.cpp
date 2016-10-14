@@ -101,9 +101,11 @@ cCoreState::cCoreState(QObject *parent) :
 
   // register threads to eventhandler
   m_pEventHandler->RegisterThread(&m_TextReader);
+  m_pEventHandler->RegisterThread(&m_Ears);
 
   // start threads
   m_TextReader.start();
+  m_Ears.start();
 
   m_EventQueue = QQueue<EVENTS::cEvent>();
 
