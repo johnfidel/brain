@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStandardItemModel>
+
+#include "View/MainViewModel.h"
 
 namespace Ui {
   class MainWindow;
@@ -13,6 +16,13 @@ class MainWindow : public QMainWindow
 
   public:
     explicit MainWindow(QWidget *parent = 0);
+
+    ///
+    /// \brief SetModel
+    /// \param model
+    /// sets the underlying datamodel for view
+    void setModel(cMainViewModel& model);
+
     ~MainWindow();
 
   private:

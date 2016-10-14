@@ -88,7 +88,7 @@ void cBrainObject::AddName(const QString& name, int langId)
 /// \brief cBrainObject::AddImage
 /// \param image
 ///
-void cBrainObject::AddImage(const QImage& image)
+void cBrainObject::AddImage(const QImage&)
 {
   //*m_pImage = image;
 }

@@ -25,7 +25,8 @@ SOURCES += main.cpp \
 \
     Settings/AppConfig.cpp \
     EventHandler.cpp \
-    View/MainWindow.cpp
+    View/MainView.cpp \
+    View/MainViewModel.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -48,7 +49,8 @@ HEADERS += \
     EventHandler.h \
     Event.h \
     ModDefs.h \
-    View/MainWindow.h
+    View/MainView.h \
+    View/MainViewModel.h
 
 DISTFILES += \
     qtbuild
