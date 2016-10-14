@@ -1,5 +1,6 @@
-#include "MainWindow.h"
+#include "MainView.h"
 #include "ui_MainWindow.h"
+#include "View/MainViewModel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -11,4 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
+}
+
+void MainWindow::setModel(cMainViewModel& model)
+{
+  model.setViewFinder(ui->viewFinder);
 }

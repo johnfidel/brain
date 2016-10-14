@@ -16,30 +16,26 @@
 *-------------------------------------------------------------------------------
 */
 #include "WebCam.h"
+#include "View/MainView.h"
 
-/*!
- * \brief cWebCam::cWebCam
- *        standardconstructor of class
- */
-cWebCam::cWebCam()
+#include <QAction>
+#include <QCameraImageCapture>
+#include <QCameraViewfinder>
+
+//-------------------------------------------------------------------
+//
+cWebCam::cWebCam(QObject *parent) : QObject(parent)
 {
+  m_camera = new QCamera(QCameraInfo::defaultCamera());
 
-  QCamera Cam;
-  QCameraInfo myCamera;
-  QCameraInfo cameraInfo(myCamera);
+  m_ImageCapturer = new QCameraImageCapture(m_camera);
+}
 
-  myCamera = QCameraInfo::defaultCamera();
-  qDebug() << myCamera.deviceName();
+//-------------------------------------------------------------------
+//
+void cWebCam::setViewFinder(QCameraViewfinder *pViewFinder)
+{
+  m_camera->setViewfinder(pViewFinder);
 
-  QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-  foreach (const QCameraInfo &cameraInfo, cameras)
-      qDebug() << cameraInfo.deviceName();
-
-  if (cameraInfo.position() == QCamera::FrontFace)
-      qDebug() << "The camera is on the front face of the hardware system.";
-  else if (cameraInfo.position() == QCamera::BackFace)
-      qDebug() << "The camera is on the back face of the hardware system.";
-
-  qDebug() << "The camera sensor orientation is " << cameraInfo.orientation() << " degrees.";
-
+  m_camera->start();
 }

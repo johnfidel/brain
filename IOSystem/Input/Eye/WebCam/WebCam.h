@@ -4,18 +4,31 @@
 #include <QObject>
 #include <QCamera>
 #include <QCameraInfo>
+#include <QCameraImageCapture>
 
 #include "GenDefs.h"
+#include "View/MainViewModel.h"
 
-class cWebCam
+class cWebCam : public QObject
 {
-public:
 
-  explicit cWebCam();
+  private:
+    QCamera *m_camera;
+    QCameraImageCapture *m_ImageCapturer;
 
-signals:
+  public:
 
-public slots:
+    ///
+    /// \brief cWebCam
+    ///
+    explicit cWebCam(QObject *parent = nullptr);
+
+    void setViewFinder(QCameraViewfinder *pViewFinder);
+
+  signals:
+
+  public slots:
+
 };
 
 #endif // CWEBCAM_H
