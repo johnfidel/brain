@@ -1,4 +1,4 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include <iostream>
 #include <QtSerialPort/QSerialPort>
 #include <QDebug>
@@ -9,6 +9,7 @@
 #include "BrainLogic/CoreState.h"
 #include "Logging/Logger.h"
 #include "Logging/LogMessage.h"
+#include "View/MainWindow.h"
 #include "IOSystem/Input/Eye/WebCam/WebCam.h"
 
 void getLoggingConfiguration()
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
 {
 
   // create main application thread
-  QCoreApplication App(argc, argv);
+  QApplication App(argc, argv);
 
   initApplication(&App);
 
@@ -51,6 +52,9 @@ int main(int argc, char *argv[])
 
   // log programstard
   LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Application started", LOGGING::LoggingLevelInfo);
+
+  MainWindow w;
+  w.show();
 
   // mainloop
   return App.exec();

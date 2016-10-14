@@ -1,14 +1,13 @@
-QT += core
+QT += core gui
 QT += multimedia multimediawidgets
-QT -= gui
 QT += network
 QT += websockets
 
-TARGET = brain
-CONFIG += console
-CONFIG -= app_bundle
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-INCLUDEPATH += /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
+TARGET = brain
+CONFIG -= app_bundle
+CONFIG += console
 
 TEMPLATE = app
 
@@ -25,7 +24,8 @@ SOURCES += main.cpp \
     Utils/JsonSerializer.cpp \
 \
     Settings/AppConfig.cpp \
-    EventHandler.cpp
+    EventHandler.cpp \
+    View/MainWindow.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -47,8 +47,12 @@ HEADERS += \
     GenDefs.h \
     EventHandler.h \
     Event.h \
-    ModDefs.h
+    ModDefs.h \
+    View/MainWindow.h
 
 DISTFILES += \
     qtbuild
+
+FORMS += \
+    View/MainWindow.ui
 
