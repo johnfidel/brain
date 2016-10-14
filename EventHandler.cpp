@@ -11,9 +11,7 @@
 ///
 EVENTS::cEventHandler::cEventHandler(QObject *parent) :
   QObject(parent)
-{
-
-}
+{ }
 //-----------------------------------------------------------------------------
 
 //*****************************************************************************
@@ -43,7 +41,25 @@ bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
 
   if (pThread != 0)
   {
-    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)));
+    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
+  }
+
+  return true;
+}
+//-----------------------------------------------------------------------------
+
+///
+/// \brief EVENTS::cEventHandler::RegisterThread
+/// \param pMainThread
+/// \param pThread
+/// \return
+///
+bool EVENTS::cEventHandler::RegisterThread(QThread *pMainThread, INPUT::cInputInterface *pThread)
+{
+  if ((pThread != 0) && (pMainThread != 0))
+  {
+    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
+    QObject::connect(pMainThread, SIGNAL(Event(EVENTS::cEvent)), pThread, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
   }
 
   return true;

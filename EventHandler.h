@@ -45,6 +45,7 @@ namespace EVENTS
 
       /// \brief Register any thread to the Eventhandler
       bool RegisterThread(INPUT::cInputInterface *pThread);
+      bool RegisterThread(QThread *pMainThread, INPUT::cInputInterface *pThread);
 
     signals:
 

@@ -18,6 +18,7 @@ const QString INPUT::cTextReader::CONSOLE_PROMPT = "brain: ";
 // main function
 void INPUT::cTextReader::run()
 {
+
   QTextStream in(stdin);
   QTextStream out(stdout, QIODevice::WriteOnly);
 

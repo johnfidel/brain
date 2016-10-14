@@ -24,27 +24,29 @@
 
 //-------------------------------------------------------------------
 //
-cWebCam::cWebCam(QObject *parent) : QObject(parent)
+cWebCam::cWebCam(QCameraViewfinder *pViewFinder, QObject *parent) : QObject(parent)
 {
-  m_camera = new QCamera(QCameraInfo::defaultCamera());
+  m_pCamera = new QCamera(QCameraInfo::defaultCamera());
 
-  m_ImageCapturer = new QCameraImageCapture(m_camera);
+  m_pImageCapturer = new QCameraImageCapture(m_pCamera);
 
-  connect(m_ImageCapturer, SIGNAL(readyForCaptureChanged(bool)), this, SLOT(readyForCapture(bool)));
-  connect(m_ImageCapturer, SIGNAL(imageCaptured(int,QImage)), this, SLOT(processCapturedImage(int,QImage)));
-  connect(m_ImageCapturer, SIGNAL(imageSaved(int,QString)), this, SLOT(imageSaved(int,QString)));
-  connect(m_ImageCapturer, SIGNAL(error(int,QCameraImageCapture::Error,QString)), this,
+  connect(m_pImageCapturer, SIGNAL(readyForCaptureChanged(bool)), this, SLOT(readyForCapture(bool)));
+  connect(m_pImageCapturer, SIGNAL(imageCaptured(int,QImage)), this, SLOT(processCapturedImage(int,QImage)));
+  connect(m_pImageCapturer, SIGNAL(imageSaved(int,QString)), this, SLOT(imageSaved(int,QString)));
+  connect(m_pImageCapturer, SIGNAL(error(int,QCameraImageCapture::Error,QString)), this,
           SLOT(displayCaptureError(int,QCameraImageCapture::Error,QString)));
 
+  // create viewfinder to be able to start camera
+  m_pCamera->setViewfinder(pViewFinder);
+
+  m_pCamera->start();
 }
 
 //-------------------------------------------------------------------
 //
 void cWebCam::setViewFinder(QCameraViewfinder *pViewFinder)
 {
-  m_camera->setViewfinder(pViewFinder);
-
-  m_camera->start();
+  m_pCamera->setViewfinder(pViewFinder);  
 }
 
 //-------------------------------------------------------------------
@@ -58,7 +60,7 @@ void cWebCam::readyForCapture(bool ready)
 void cWebCam::processCapturedImage(int requestId, const QImage& img)
 {
     Q_UNUSED(requestId);
-    QImage scaledImage = img.scaled(m_camera->viewfinderSettings().resolution(),
+    QImage scaledImage = img.scaled(m_pCamera->viewfinderSettings().resolution(),
                                     Qt::KeepAspectRatio,
                                     Qt::SmoothTransformation);
 

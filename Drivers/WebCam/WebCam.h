@@ -14,15 +14,15 @@ class cWebCam : public QObject
   Q_OBJECT
 
   private:
-    QCamera *m_camera;
-    QCameraImageCapture *m_ImageCapturer;
+    QCamera *m_pCamera;
+    QCameraImageCapture *m_pImageCapturer;
 
   public:
 
     ///
     /// \brief cWebCam
     ///
-    explicit cWebCam(QObject *parent = nullptr);
+    explicit cWebCam(QCameraViewfinder *pCameraViewFinder, QObject *parent = nullptr);
 
     void setViewFinder(QCameraViewfinder *pViewFinder);
 
