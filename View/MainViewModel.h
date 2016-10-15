@@ -10,6 +10,7 @@ class cMainViewModel : public QObject
 
   private:
     QCameraViewfinder *m_pViewFinder;
+    QWidget *m_pWidget;
 
   public:
     cMainViewModel();
@@ -18,8 +19,11 @@ class cMainViewModel : public QObject
     /// \brief getViewFinder
     /// \return
     /// Returns the actual viewfinder object
-    QCameraViewfinder* getViewFinder() const { return m_pViewFinder; }
-    void setViewFinder(QCameraViewfinder* pViewFinder) { m_pViewFinder = pViewFinder; }
+    QCameraViewfinder* getEyes() const { return m_pViewFinder; }
+    void setEyes(QCameraViewfinder* pEyes) { m_pViewFinder = pEyes; }
+
+    QWidget* getEars() const { return m_pWidget; }
+    void setEars(QWidget* pEars) { m_pWidget = pEars; }
 
 };
 

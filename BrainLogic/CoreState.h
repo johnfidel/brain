@@ -25,8 +25,8 @@
 #include "Event.h"
 #include "EventHandler.h"
 #include "IOSystem/Input/Console/TextReader.h"
-#include "IOSystem/Input/Eye/cEye.h"
-#include "IOSystem/Input/Ears/AudioIn.h"
+#include "IOSystem/Input/Eyes/Eyes.h"
+#include "IOSystem/Input/Ears/Ears.h"
 #include "Settings/AppConfig.h"
 #include "MemoryManager.h"
 #ifdef USE_GUI
@@ -77,7 +77,7 @@ class cCoreState : public QThread
     INPUT::cEye *m_pEye;
 
     /// \brief Ears to listen audio
-    INPUT::cAudioIn m_Ears;
+    INPUT::cEars *m_pEars;
 
     /// \brief Reimplementation of function run() of QThread
     void run();

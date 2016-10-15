@@ -27,7 +27,8 @@
 **
 ****************************************************************************/
 
-#include "AudioIn.h"
+#include "Ears.h"
+#include "View/MainViewModel.h"
 
 #include <QtMultimedia/QAudioDeviceInfo>
 #include <QtMultimedia/QAudioInput>
@@ -35,7 +36,7 @@
 namespace INPUT
 {
 
-  cAudioIn::cAudioIn(QObject *parent)
+  cEars::cEars(cMainViewModel *widget, QObject *parent)
       : cInputInterface(parent),
         m_fileHandler(0),
         m_audioInput(0)
@@ -63,13 +64,18 @@ namespace INPUT
           m_audioInput->setBufferSize(1024);
   #endif
 
-          m_fileHandler = new cAudioFileHandler(this);
+#if USE_GUI
+          m_fileHandler = new cAudioFileHandler(widget->getEars(), this);
+#else
+          m_fileHandler = new cAudioFileHandler(nullptr, this);
+#endif //USE_GUI
+
           m_fileHandler->open(QIODevice::WriteOnly);
           m_audioInput->start(m_fileHandler);
       }
   }
 
-  cAudioIn::~cAudioIn()
+  cEars::~cEars()
   {
       if (m_audioInput)
           m_audioInput->stop();
@@ -82,7 +88,7 @@ namespace INPUT
 
   //--------------------------------------------------------------------------------
   // main function
-  void INPUT::cAudioIn::run()
+  void INPUT::cEars::run()
   {
 
     while (true)

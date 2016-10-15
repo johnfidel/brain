@@ -5,7 +5,8 @@
 
 #include "CoreState.h"
 #include "IOSystem/Input/Console/TextReader.h"
-#include "IOSystem/Input/Eye/cEye.h"
+#include "IOSystem/Input/Eyes/Eyes.h"
+#include "IOSystem/Input/Ears/Ears.h"
 #include "IOSystem/Input/InputInterface.h"
 #include "EventHandler.h"
 #include "BrainLogic/BrainObject.h"
@@ -107,10 +108,13 @@ cCoreState::cCoreState(QObject *parent) :
   m_pMainViewModel = new cMainViewModel();
   m_GUI.setModel(*m_pMainViewModel);
   m_pEye = new INPUT::cEye(m_pMainViewModel);
+  m_pEars = new INPUT::cEars(m_pMainViewModel);
 #else
   m_pEye = new INPUT::cEye();
+  m_pEars = new INPUT::cEars();
 #endif //USE_GUI
   m_pTextReader = new INPUT::cTextReader();
+
 
   // register threads to eventhandler
   m_pEventHandler->RegisterThread(this, m_pTextReader);

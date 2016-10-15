@@ -27,36 +27,39 @@
 **
 ****************************************************************************/
 
-#ifndef AUDIOLEVELS_H
-#define AUDIOLEVELS_H
+#ifndef AUDIOLEVELSIODEVICE_H
+#define AUDIOLEVELSIODEVICE_H
 
-#include "AudioFileHandler.h"
-#include "IOSystem/Input/InputInterface.h"
+#include <QtCore/QIODevice>
+#include <QDataStream>
 
-#include <QAudioInput>
-#include <QFile>
+#include "View/MainViewModel.h"
+#include "View/EarsWidget.h"
 
-namespace INPUT
+class HelperWidget
 {
+  private:
 
-  class cAudioIn : public cInputInterface
-  {
-      Q_OBJECT
 
-  public:
-      cAudioIn(QObject *parent = 0);
-      ~cAudioIn();
+};
 
-      /*!
-       * \brief run
-       *        Main function of thread
-       */
-      void run();
+class cAudioFileHandler : public QIODevice
+{
+    Q_OBJECT
 
   private:
-      cAudioFileHandler *m_fileHandler;
-      QAudioInput *m_audioInput;      
-  };
-}
+    cEarsWidget *m_pWidget;
+    QDataStream m_buffer;
+
+  public:
+      explicit cAudioFileHandler(QWidget *widget = 0, QObject *parent = 0);
+
+      void handleWidget(const char *data, qint64 maxSize);
+
+  protected:
+      qint64 readData(char *data, qint64 maxSize);
+      qint64 writeData(const char *data, qint64 maxSize);
+
+};
 
 #endif

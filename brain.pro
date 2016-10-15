@@ -2,6 +2,7 @@ QT += core gui
 QT += multimedia multimediawidgets
 QT += network
 QT += websockets
+QT += charts widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,10 +18,11 @@ SOURCES += main.cpp \
     BrainLogic/MemoryManager.cpp \
 \
     IOSystem/Input/Console/TextReader.cpp \
-    IOSystem/Input/Ears/AudioIn.cpp \
-    IOSystem/Input/Ears/AudioFileHandler.cpp \
+    IOSystem/Input/Ears/Ears.cpp \
+    IOSystem/Input/Eyes/Eyes.cpp \
 \
     Drivers/WebCam/WebCam.cpp \
+    Drivers/Audio/AudioFileHandler.cpp \
 \
     Logging/Logger.cpp \
 \
@@ -30,7 +32,7 @@ SOURCES += main.cpp \
     EventHandler.cpp \
     View/MainView.cpp \
     View/MainViewModel.cpp \
-    IOSystem/Input/Eye/cEye.cpp
+    View/EarsWidget.cpp
 
 HEADERS += \
     BrainLogic/BrainObject.h \
@@ -38,11 +40,12 @@ HEADERS += \
     BrainLogic/MemoryManager.h \
 \
     IOSystem/Input/Console/TextReader.h \
+    IOSystem/Input/Ears/Ears.h \
+    IOSystem/Input/Eyes/Eyes.h \
     IOSystem/Input/InputInterface.h \
-    IOSystem/Input/Ears/AudioIn.h \
-    IOSystem/Input/Ears/AudioFileHandler.h \
 \
     Drivers/WebCam/WebCam.h \
+    Drivers/Audio/AudioFileHandler.h \
 \
     Logging/Logger.h \
     Logging/LogMessage.h \
@@ -58,7 +61,7 @@ HEADERS += \
     ModDefs.h \
     View/MainView.h \
     View/MainViewModel.h \
-    IOSystem/Input/Eye/cEye.h
+    View/EarsWidget.h
 
 DISTFILES += \
     qtbuild

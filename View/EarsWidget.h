@@ -3,7 +3,7 @@
 ** Copyright (C) 2016 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the Qt Data Visualization module of the Qt Toolkit.
+** This file is part of the Qt Charts module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL$
 ** Commercial License Usage
@@ -27,27 +27,28 @@
 **
 ****************************************************************************/
 
-#ifndef AUDIOLEVELSIODEVICE_H
-#define AUDIOLEVELSIODEVICE_H
+#ifndef EARSWIDGET_H
+#define EARSWIDGET_H
 
-#include <QtCore/QIODevice>
-#include <QDataStream>
+#include <QtWidgets/QWidget>
+#include <QtCharts/QChartGlobal>
+#include <QtCharts/QChart>
+#include <QtCharts/QtCharts>
 
-class cAudioFileHandler : public QIODevice
+class cEarsWidget : public QWidget
 {
     Q_OBJECT
 
   private:
-
-    QDataStream m_buffer;
+      QChart *m_chart;
+      QLineSeries *m_series;
 
   public:
-      explicit cAudioFileHandler(QObject *parent = 0);
+    cEarsWidget(QWidget *parent = 0);
+    ~cEarsWidget();
 
-  protected:
-      qint64 readData(char *data, qint64 maxSize);
-      qint64 writeData(const char *data, qint64 maxSize);
+    QLineSeries& getLineSeries() { return *m_series; }
 
 };
 
-#endif
+#endif // EARSWIDGET_H

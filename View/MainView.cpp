@@ -16,5 +16,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::setModel(cMainViewModel& model)
 {
-  model.setViewFinder(ui->viewFinder);
+  model.setEyes(ui->Eyes);
+  model.setEars(ui->Ears);
 }

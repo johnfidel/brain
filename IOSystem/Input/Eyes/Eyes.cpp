@@ -1,4 +1,4 @@
-#include "cEye.h"
+#include "Eyes.h"
 
 namespace INPUT
 {
@@ -11,7 +11,7 @@ namespace INPUT
     // create webcam
     if (widget)
     {
-      m_pViewFinder = widget->getViewFinder();
+      m_pViewFinder = widget->getEyes();
     }
     else
     {
