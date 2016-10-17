@@ -33,11 +33,59 @@ namespace EVENTS
 
     public:
 
-      enum EventEnum
+      enum eMainEvent
       {
-        Event_Invalid = 0,
-        Event_ConsoleInput,
-        Event_BrainNeuroneFound,
+        MainEvent_None = 0,
+        MainEvent_ConsoleInput,
+        MainEvent_BrainNeuroneFound,
+        MainEvent_Ears,
+        MainEvent_Eyes,
+      };
+
+      enum eSubEventNone
+      {
+        SubEventNone_None = 0
+      };
+
+      enum eSubEventEars
+      {
+        SubEventEars_None = 0,
+        SubEventEars_heared_something,
+      };
+
+      enum eSubEventEyes
+      {
+        SubEventEyes_None = 0,
+        SubEventEyes_Seen_something,
+      };
+
+      union eSubEvent
+      {
+        eSubEventNone None;
+        eSubEventEars Ears;
+        eSubEventEyes Eyes;
+      };
+
+      struct tEvent
+      {
+        eMainEvent mainEvent;
+        eSubEvent subEvent;
+        tEvent()
+        {
+          mainEvent = (eMainEvent)0;
+          subEvent.None = (eSubEventNone)0;
+        }
+        tEvent(eMainEvent main, int sub)
+        {
+          mainEvent = main;
+          subEvent.None = (eSubEventNone)sub;
+        }
+        tEvent operator=(const tEvent other)
+        {
+          mainEvent = other.mainEvent;
+          subEvent = other.subEvent;
+          return *this;
+        }
       };
 
     private:
@@ -46,7 +94,7 @@ namespace EVENTS
        * \brief eUserEventId
        *        this field stores the ID of event
        */
-      EventEnum m_eEventId;
+      tEvent m_EventId;
       QString m_text;
       cBrainObject *m_pBrainObject;
       cBrainNeurone *m_pBrainNeurone;
@@ -59,7 +107,7 @@ namespace EVENTS
        */
       void initData()
       {
-         m_eEventId = (EventEnum)0;
+         m_EventId = tEvent();
          m_text = QString("");
 
          m_pBrainObject = NULL;
@@ -96,7 +144,7 @@ namespace EVENTS
       {
         initData();
 
-        m_eEventId = event.m_eEventId;
+        m_EventId = event.m_EventId;
         m_text = event.m_text;
         m_pBrainNeurone = event.BrainNeurone();
         m_pBrainObject = event.BrainObject();
@@ -108,11 +156,11 @@ namespace EVENTS
        * \param id
        * \param text
        */
-      cEvent(const EventEnum id, QString text = "")
+      cEvent(const tEvent id, QString text = "")
       {
         initData();
 
-        m_eEventId = id;
+        m_EventId = id;
         m_text = QString(text);
       }
 
@@ -124,7 +172,8 @@ namespace EVENTS
       {
         initData();
 
-        m_eEventId = Event_BrainNeuroneFound;
+        m_EventId.mainEvent = MainEvent_BrainNeuroneFound;
+        m_EventId.subEvent.None = SubEventNone_None;
         m_pBrainObject = pObj;
       }
 
@@ -136,12 +185,13 @@ namespace EVENTS
       {
         initData();
 
-        m_eEventId = Event_BrainNeuroneFound;
+        m_EventId.mainEvent = MainEvent_BrainNeuroneFound;
+        m_EventId.subEvent.None = SubEventNone_None;
         m_pBrainNeurone = pNeurone;
       }
 
       /// \brief Getter and Setter for local variables
-      EventEnum EventId() const { return m_eEventId; }
+      tEvent EventId() const { return m_EventId; }
       QString Text() const { return m_text; }
       cBrainObject *BrainObject() const { return m_pBrainObject; }
       cBrainNeurone *BrainNeurone() const { return m_pBrainNeurone; }

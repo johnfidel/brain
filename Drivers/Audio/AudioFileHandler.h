@@ -32,6 +32,7 @@
 
 #include <QtCore/QIODevice>
 #include <QDataStream>
+#include <QQueue>
 
 #include "View/MainViewModel.h"
 #include "View/EarsWidget.h"
@@ -49,17 +50,20 @@ class cAudioFileHandler : public QIODevice
 
   private:
     cEarsWidget *m_pWidget;
-    QDataStream m_buffer;
+    QQueue<char> m_DataQueue;
+    QElapsedTimer m_pretimer;
+    QElapsedTimer m_posttimer;
 
   public:
       explicit cAudioFileHandler(QWidget *widget = 0, QObject *parent = 0);
 
       void handleWidget(const char *data, qint64 maxSize);
 
+      bool saveFile();
+
   protected:
       qint64 readData(char *data, qint64 maxSize);
-      qint64 writeData(const char *data, qint64 maxSize);
-
+      qint64 writeData(const char *data, qint64 maxSize);      
 };
 
 #endif

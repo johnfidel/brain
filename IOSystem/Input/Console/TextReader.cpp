@@ -34,7 +34,8 @@ void INPUT::cTextReader::run()
 
     if (entry != "")
     {
-      emit Event(EVENTS::cEvent(EVENTS::cEvent::Event_ConsoleInput, entry));
+      emit Event(EVENTS::cEvent(EVENTS::cEvent::tEvent(EVENTS::cEvent::MainEvent_ConsoleInput,
+                                                       (int)EVENTS::cEvent::SubEventNone_None), entry));
     }
   }
 }

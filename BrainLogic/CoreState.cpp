@@ -184,10 +184,10 @@ void cCoreState::OnEvent(const EVENTS::cEvent &event)
 {
 
   // evaluate received event
-  switch (event.EventId())
+  switch (event.EventId().mainEvent)
   {
 
-    case EVENTS::cEvent::Event_ConsoleInput:
+    case EVENTS::cEvent::MainEvent_ConsoleInput:
     {
       m_Mutex.lock();
       m_eMainState = CoreState_Input;
@@ -197,7 +197,7 @@ void cCoreState::OnEvent(const EVENTS::cEvent &event)
       break;
     }
 
-    case EVENTS::cEvent::Event_BrainNeuroneFound:
+    case EVENTS::cEvent::MainEvent_BrainNeuroneFound:
     {
       m_Mutex.lock();
       m_eMainState = CoreState_Output;

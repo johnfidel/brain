@@ -30,7 +30,7 @@ namespace INPUT
   {
     while (true)
     {
-      QThread::msleep(20);
+      QThread::msleep(20);           
     }
   }
 

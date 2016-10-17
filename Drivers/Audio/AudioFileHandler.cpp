@@ -30,8 +30,10 @@
 #include "AudioFileHandler.h"
 #include "View/EarsWidget.h"
 
+#include <QElapsedTimer>
 #include <QtCore/QDebug>
 #include <QFile>
+#include <QDataStream>
 
 static const int resolution = 8;
 
@@ -56,6 +58,28 @@ void cAudioFileHandler::handleWidget(const char *data, qint64 maxSize)
   m_pWidget->getLineSeries().replace(points);
 }
 
+//-----------------------------------------------------------------------------------
+//
+bool cAudioFileHandler::saveFile()
+{
+  static int fileNr = 0;
+  QString filename = QString("audio") + QString::number(fileNr++) + QString(".raw");
+  QFile file(filename);
+  file.open(QIODevice::WriteOnly);  
+
+  while (m_DataQueue.count() > 0)
+  {
+    char chr = m_DataQueue.dequeue();
+    file.write(&chr);
+  }
+
+  file.close();
+
+  qDebug() << "file: " << filename << " saved.";
+
+  return true;
+}
+
 cAudioFileHandler::cAudioFileHandler(QWidget *widget, QObject *parent)
     : QIODevice(parent), m_pWidget(0)
 {
@@ -64,6 +88,11 @@ cAudioFileHandler::cAudioFileHandler(QWidget *widget, QObject *parent)
     m_pWidget = new cEarsWidget(widget);
     m_pWidget->show();
   }
+
+  // start timer
+  m_pretimer.start();
+  m_posttimer.start();
+
 }
 
 // Implementation required for this pure virtual function
@@ -76,6 +105,9 @@ qint64 cAudioFileHandler::readData(char *data, qint64 maxSize)
 
 qint64 cAudioFileHandler::writeData(const char *data, qint64 maxSize)
 {
+  static bool recording = false;
+  static qint64 addedPoints = 0;
+  static qint64 addedPointsSince200ms = 0;
 
   // handle gui
   if (m_pWidget)
@@ -83,8 +115,10 @@ qint64 cAudioFileHandler::writeData(const char *data, qint64 maxSize)
     handleWidget(data, maxSize);
   }
 
-  // first save acutal data
-  m_buffer.writeBytes(data, maxSize);
+//  QFile file("audiotest.raw");
+//  file.open(QIODevice::Append);
+//  file.write(data, maxSize);
+//  file.close();
 
   // check level of audio
   int index = 0;
@@ -92,6 +126,11 @@ qint64 cAudioFileHandler::writeData(const char *data, qint64 maxSize)
   float peakvalue = 0.0;
   for (int i = 0; i < maxSize; i++)
   {
+
+    // first save acutal data
+    m_DataQueue.enqueue(data[i]);
+    addedPoints++;
+
     // Add 0.01 to the value to avoid gaps in the graph (i.e. zero height bars).
     // Also, scale to 0...100
     float value = float(quint8(data[i]) - 128) / 1.28f + 0.01f;
@@ -105,7 +144,35 @@ qint64 cAudioFileHandler::writeData(const char *data, qint64 maxSize)
 
   if (peakvalue > 2.0)
   {
+    recording = true;
+    m_posttimer.restart();
     qDebug() << "peak " << peakvalue;
+  } 
+
+  // reset pretimer
+  if ((m_pretimer.hasExpired(200)) && (recording == false))
+  {
+    addedPointsSince200ms = addedPoints;
+  }
+  if ((m_pretimer.hasExpired(400)) && (recording == false))
+  {
+    m_pretimer.restart();
+    // remove first 200ms of recording
+    for (quint64 i = 0; i < (addedPoints - addedPointsSince200ms); i++)
+    {
+      m_DataQueue.dequeue();
+    }
+    qDebug() << "removed: " << (addedPoints - addedPointsSince200ms) << " data";
+    addedPoints = 0;
+    addedPointsSince200ms = 0;
+  }
+
+  if ((recording) && (m_posttimer.hasExpired(200)))
+  {
+    recording = false;
+    m_posttimer.restart();
+    m_pretimer.restart();
+    saveFile();
   }
 
   return maxSize;
