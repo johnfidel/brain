@@ -1,256 +1,59 @@
-#!/bin/sh
-#
-# -----------------------------------
-# author:	johnfidel
-# date:		04.02.2016
-# purpose:	
-# -----------------------------------
- 
-name="build"
-version="1.0"
+#!/bin/bash
 
-#local variables
-CONFIG_FILE=".qtbuild_config"
-QT_VERSION="5.7"
-QT_TARGET_PLATFORM="gcc_64"    # needed to get the correct installation path of qt
-PLATFORM_SPEC="-r -spec linux-g++-64"
-BUILD_CONFIG="CONFIG+=release"
+# local variables
+DESTDIR=build-brain
+QT_VERSION=5.7
+QT_TARGET_PLATFORM=gcc_64
 
-print_version()
-{
-	echo ""
-	echo " Script: $name / Version: $version"
-	echo " Enter -h for help"
-	echo ""
-}
-
-print_help() 
-{
-	echo ""
-	echo -e "\t scriptname:\t $name"
-	echo -e "\t version:\t $version"
-	echo ""
-	echo " ----------------------------- help --------------------------------------------------- "
-	echo ""
-	echo " usage: $name [PARAM] [OPTION]"
-	echo ""
-	echo " Parameters:"
-  echo " With no parameter, $name will try to use the last config."
-  echo ""
-  echo -e " configure:\t should be done the first time"
-  echo -e " all [project_file] [output_dir]:\t\t executes the build process."
-  echo -e "                                 \t\t let output_dir empty if no shadow build is needed."
-  echo -e "                                 \t\t default --> ./qtbuild all brain.pro brain-release"
-  echo ""
-  echo " Or you can simply give in the qmake parameter directly "
-	echo ""
-	echo " Options:"
-	echo -e " -h, -? or help: Print this help"
-	echo -e " -v:\t\t show verbose output"
-	echo -e " -V:\t\t show script version"
-	echo ""
-}
-
-#check if all needed programs are installed
-Prerequisites()
-{
-  echo "look for mlocate..."
-  if [ -z $(which mlocate) ]; then
-    echo "mlocate is not installed. Try apt-get install mlocat"
-    exit 1
-  fi
-  
-  # get qt path
-  qtpath=$(mlocate bin/qmake| grep $QT_VERSION| grep $QT_TARGET_PLATFORM)
-  if [ -n "$qtpath" ]; then
-    QT_QMAKE_PATH=$qtpath
-  fi
-
-
-  #check make
-  echo "look for make..."
-  if [ -z $(which make) ]; then
-    echo "make seems not to be installed. Try apt-get install build-essentials"
-    exit 1
-  fi
-
-  #check qmake
-  echo "use $($QT_QMAKE_PATH -v)"
-
-  # get nr of cpu
-  nrofcpu=$(nproc)
-  if [ $nrofcpu -ge 2 ]; then
-    echo "found $nrofcpu CPUs. Try to use them."
-    NR_OF_CPU="-j$nrofcpu"
-  else
-    echo "only one usable CPU. Do not compile with -j option"
-    NR_OF_CPU=""
-  fi
-
-  # first line of config file
-  echo "$QT_QMAKE_PATH" > $CONFIG_FILE
-  echo "$PLATFORM_SPEC $BUILD_CONFIG" >> $CONFIG_FILE
-  echo "make clean $NR_OF_CPU" >> $CONFIG_FILE
-  echo "make $NR_OF_CPU" >> $CONFIG_FILE
-
-}
-
-# read out the config of configfile
-GetConfig()
-{
-
-  if [ ! -e $CONFIG_FILE ]; then
-    echo "no configuration available! force config"
-    Prerequisites
-  fi
-
-  # read in config file
-  i=0
-  while read line; do
-    i=`expr $i + 1`
-    if [ $i -eq 1 ]; then QMAKE1=$line; fi
-    if [ $i -eq 2 ]; then QMAKE2=$line; fi
-    if [ $i -eq 3 ]; then CLEAN=$line; fi
-    if [ $i -eq 4 ]; then MAKE=$line; fi
-  done < $CONFIG_FILE
-}
-
-# this is the executing stuff function
-do_stuff()
-{
-  # save actual path
-  actualPath=$(pwd)
-  echo "actually in directory: $actualPath"
-
-  # get all prerequisites, if we should configure
-  if [ -n "$configure" ]; then
-    Prerequisites
-  fi
-
-  # start build for all
-  if [ -n "$all" ]; then
-    GetConfig
-
-    # start build process
-    if [ ! -z $output_dir ]; then
-      echo "exit actual directory"
-      cd ..
-      if [ ! -e $output_dir ]; then
-        mkdir -v $output_dir
-      fi
-      echo "go into $output_dir"
-      cd $output_dir
-    fi
-
-    # check if a projectfile is provided, if not take the first one found in
-    # actual directory
-    if [ -z $project_file ]; then
-      project_file=$(ls *.pro)
-    fi
-
-    # create full qmake command
-    cmd="$QMAKE1 $actualPath/$project_file $QMAKE2"
-    echo "perform $cmd"
-
-    # execute qmake command
-    if [ -z $verbose ]; then
-      $cmd > /dev/zero
-    else
-      $cmd > /dev/zero
-    fi
-
-    # create clean command
-    cmd=$CLEAN
-    echo "perform $cmd"
-
-    if [ -z $verbose ]; then
-      $cmd > /dev/zero
-    else
-      $cmd
-    fi
-
-    # create make command
-    cmd=$MAKE
-    echo "perform $cmd"
-
-    if [ -z $verbose ]; then
-      $cmd > /dev/zero
-    else
-      $cmd
-    fi
-
-    #returning to initial dir
-    cd $actualPath
-
-  fi
-
-}
-
-# Main Script Routine
-# -------------------------------------------------------------------------------------
-#
-# if no arguments are available
-if [ -z "$1" ]; then
-	echo ""
-	echo "no arguments... "
-	echo " Enter -h for help"
-	echo ""
+echo -n "look for locate..."
+if [ -z $(which locate) ]; then
+	echo "locate is not installed. Try apt-get install locate"
 	exit 1
 fi
+echo ok
+  
+# get qt path
+echo -n "look for qmake..."
+qtpath=$(locate bin/qmake| grep $QT_VERSION| grep $QT_TARGET_PLATFORM)
+if [ -n "$qtpath" ]; then
+	QT_QMAKE_PATH=$qtpath
+fi
+echo ok
+#check qmake
+echo -e "use $($QT_QMAKE_PATH -v)"
 
-# process every argument
-until [ -z "$1" ]; do
-  case ${1} in
+#check make
+echo -n  "look for make..."
+if [ -z $(which make) ]; then
+	echo "make seems not to be installed. Try apt-get install build-essentials"
+	exit 1
+fi
+echo ok 
 
-		# arguments    
-    "configure")
-      configure="true"
-    ;;
+#dependencies --> 	libasound2-dev libgstreamer0.10-dev
 
-    "all")
-      if [ $# -gt 1 ]; then
-        shift
-        project_file=$1
-      fi
-      if [ $# -gt 1 ]; then
-        shift
-        output_dir=$1
-      fi   
-      all="true"
-    ;;
+#gstreamer
+echo -n  "look for gstreamer..."
+if [ $(ldconfig -p| grep libgstreamer-0.10| wc -l) -lt 1 ]; then
+	echo "gstreamer not installed! try: apt-get install libgstreamer-0.10-dev"
+	exit 1
+fi
+echo ok
 
-		# options
+# libasound2
+echo -n  "look for asound..."
+if [ $(ldconfig -p| grep libasound| wc -l) -lt 1 ]; then
+	echo "libasound not installed! try: apt-get install libasound-dev"
+	exit 1
+fi
+echo ok
 
-		"-h"|"-?")
-			print_help
-			exit 0
-		;;
+if [  ! -d $DESTDIR ]; then
+	mkdir -p $DESTDIR
+fi
+cd $DESTDIR
 
-		"-V")
-			print_version
-			exit 0
-		;;
-
-		"-v")
-			verbose="true"
-		;;
-
-    *)
-      echo "invalid argument $1"
-      print_help
-      exit 1
-    ;;
-
-	esac
-	shift
-done
-
-echo "do stuff ... "
-
-do_stuff
-
-echo "terminated"
+# qmake
+$QT_QMAKE_PATH ../src/brain.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 
 exit 0
-
-
