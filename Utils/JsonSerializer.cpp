@@ -17,43 +17,72 @@
 *-------------------------------------------------------------------------------
 */
 #include <QJsonDocument>
+#include <QFile>
+#include <QDir>
+#include <QFileInfo>
+#include <QDataStream>
+#include <QDebug>
 
+#include "Logging/Logger.h"
 #include "JsonSerializer.h"
 
-/*!
- * \brief cJsonSerializer::cJsonSerializer
- * \param parent
- */
-QString cJsonSerializer::QJsonToString(const QJsonObject& obj)
-{
-  QJsonDocument doc(obj);
-  return QString(doc.toJson(QJsonDocument::Compact));
-}
+//***********************************************************************
+// private functions
+//
+
+//***********************************************************************
+// public functions
+//
 
 ///
-/// \brief cJsonSerializer::QStringToJson
-/// \param str
+/// \brief cJsonSerializer::FileToJson
+///         Wandelt eine json datei in ein Objekt um
+/// \param File
+/// \param obj
 /// \return
 ///
-QJsonObject cJsonSerializer::QStringToJson(const QString&)
+QJsonObject cJsonSerializer::QFileToJson(const QString &File)
 {
-  return QJsonObject();
+  QFile jsonFile(File);
+  if (!jsonFile.open(QFile::ReadOnly | QIODevice::Text))
+  {
+    // log programstard
+    LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Cant open file: " + File, LOGGING::LoggingLevelDebug);
+
+  }
+  QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
+  jsonFile.close();
+
+  return doc.object();
 }
+//---------------------------------------------------------------------
 
 /*!
  * \brief cJsonSerializer::QJSonToFile
- *        Save a JSON Object into a file
+ *       Save a JSON Object into a file
  * \param obj
  *        the Object
  * \param File
  *        the filename
  * \return
  */
-bool cJsonSerializer::QJsonToFile(const QJsonObject &, const QString &)
+bool cJsonSerializer::QJsonToFile(const QJsonObject &obj, const QString &File)
 {
+  QJsonDocument doc(obj);
+  QFile jsonFile(File);
+
+  QFileInfo info(jsonFile.fileName());
+  if (!info.absoluteDir().exists())
+  {
+    info.absoluteDir().mkpath(info.absoluteDir().absolutePath());
+  }
+
+  jsonFile.open(QFile::ReadWrite);
+  jsonFile.write(doc.toJson());
+  jsonFile.close();
 
   return false;
 }
-
+//---------------------------------------------------------------------
 
 

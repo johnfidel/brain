@@ -21,11 +21,11 @@
 
 #include <QObject>
 
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 
 namespace INPUT
 {
-  class cTextReader : public cInputInterface
+  class cTextReader : public cIOInterface
   {
       Q_OBJECT
     private:

@@ -16,10 +16,13 @@ SOURCES += main.cpp \
     BrainLogic/BrainObject.cpp \
     BrainLogic/CoreState.cpp \
     BrainLogic/MemoryManager.cpp \
+    BrainLogic/BrainNeurone.cpp \
+    BrainLogic/BrainExperience.cpp \
 \
     IOSystem/Input/Console/TextReader.cpp \
     IOSystem/Input/Ears/Ears.cpp \
     IOSystem/Input/Eyes/Eyes.cpp \
+    IOSystem/Output/Console/TextWriter.cpp \
 \
     Drivers/WebCam/WebCam.cpp \
     Drivers/Audio/AudioFileHandler.cpp \
@@ -38,11 +41,15 @@ HEADERS += \
     BrainLogic/BrainObject.h \
     BrainLogic/CoreState.h \
     BrainLogic/MemoryManager.h \
+    BrainLogic/BrainNeurone.h \
+    BrainLogic/BrainExperience.h \
+    BrainLogic/MemoryManager_Def.h \
 \
     IOSystem/Input/Console/TextReader.h \
     IOSystem/Input/Ears/Ears.h \
     IOSystem/Input/Eyes/Eyes.h \
-    IOSystem/Input/InputInterface.h \
+    IOSystem/Output/Console/TextWriter.h \
+    IOSystem/IOInterface.h \
 \
     Drivers/WebCam/WebCam.h \
     Drivers/Audio/AudioFileHandler.h \
@@ -57,6 +64,7 @@ HEADERS += \
 \
     GenDefs.h \
     EventHandler.h \
+    EventInterface.h \
     Event.h \
     ModDefs.h \
     View/MainView.h \

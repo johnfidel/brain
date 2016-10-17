@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <QMap>
 #include <QJsonDocument>
+#include <QDateTime>
 
-#include "BrainObject.h"
+#include "BrainLogic/BrainExperience.h"
 
 //***********************************************************************
 // private functions
@@ -18,8 +19,8 @@
 /// \brief cBrainObject::cBrainObject
 /// \param parent
 ///
-cBrainObject::cBrainObject(QObject *parent) :
-  QObject(parent), m_Name("")//, m_pImage(0)
+cBrainExperience::cBrainExperience(QObject *parent) :
+  QObject(parent)
 {
   // save creation time
   m_TimeStamp = QDateTime::currentDateTime();
@@ -27,46 +28,39 @@ cBrainObject::cBrainObject(QObject *parent) :
 //------------------------------------------------------------------------
 
 ///
-/// \brief cBrainObject
+/// \brief cBrainObject::cBrainObject
 /// \param name
-/// \param parent
+/// \param langId
 ///
-cBrainObject::cBrainObject(const QString &name, QObject *parent) :
+cBrainExperience::cBrainExperience(const QString &experience, QObject *parent) :
   QObject(parent)
 {
   // save creation time
   m_TimeStamp = QDateTime::currentDateTime();
-  m_Name = name;
+  m_Experience = experience;
 }
 //------------------------------------------------------------------------
 
 ///
 /// \brief cBrainObject::~cBrainObject
 ///
-cBrainObject::~cBrainObject()
-{
-//  if (m_pImage != 0)
-//  {
-//    delete m_pImage;
-//    m_pImage = 0;
-//  }
-}
+cBrainExperience::~cBrainExperience()
+{ }
 //------------------------------------------------------------------------
 
 ///
 /// \brief cBrainObject::toJson
 /// \return
 ///
-QJsonObject cBrainObject::toJson() const
+QJsonObject cBrainExperience::toJson() const
 {
   QJsonObject tmp;
 
   // append all properties to json object
   tmp.insert("m_TimeStamp", QJsonValue(m_TimeStamp.toString()));
-  tmp.insert("m_Name", QJsonValue(m_Name));
+  tmp.insert("m_Experience", QJsonValue(m_Experience));
 
   return tmp;
-
 }
 //------------------------------------------------------------------------
 
@@ -75,13 +69,13 @@ QJsonObject cBrainObject::toJson() const
 /// \param string
 /// \return
 ///
-cBrainObject* cBrainObject::fromJson(const QJsonObject &jobj)
+cBrainExperience* cBrainExperience::fromJson(const QJsonObject &obj)
 {
 
-  cBrainObject *obj = new cBrainObject();
-  obj->Name(jobj["m_Name"].toString());
-  obj->TimeStamp(QDateTime::fromString(jobj["m_TimeStamp"].toString()));
+  cBrainExperience *exp = new cBrainExperience();
+  exp->Experience(obj["m_Experience"].toString());
+  exp->TimeStamp(QDateTime::fromString(obj["m_TimeStamp"].toString()));
 
-  return obj;
+  return exp;
 }
 //------------------------------------------------------------------------

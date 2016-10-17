@@ -7,11 +7,12 @@
 #include "IOSystem/Input/Console/TextReader.h"
 #include "IOSystem/Input/Eyes/Eyes.h"
 #include "IOSystem/Input/Ears/Ears.h"
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 #include "EventHandler.h"
 #include "BrainLogic/BrainObject.h"
 #include "Utils/JsonSerializer.h"
 #include "Logging/Logger.h"
+#include "EventHandler.h"
 #include "View/MainView.h"
 
 //****************************************************************************
@@ -25,6 +26,9 @@ void cCoreState::run()
 {
   CoreStateEnum state = (CoreStateEnum)0;
   EVENTS::cEvent event; 
+
+  // log programstard
+  LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Enter cCoreState thread", LOGGING::LoggingLevelVerbose);
 
   while (isRunning())
   {
@@ -42,20 +46,45 @@ void cCoreState::run()
     switch (state)
     {
 
-      case Idle:
+      case CoreState_Idle:
       {
+
+        // we have nothing to do... lets memorymanager
+        // do some sorting in our memory
+        m_pMemoryManager->ManageMemory();
 
         break;
       }
 
-      case HandleConsoleInput:
+      case CoreState_Input:
       {
         // log incoming input
-        LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelInfo);
+        LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Console input received", LOGGING::LoggingLevelVerbose);
 
-        cBrainObject *pObj = new cBrainObject(event.Text());
-        m_pMemoryManager->AddToMemory(*pObj);
-        cJsonSerializer::QJsonToFile(pObj->toJson(), pObj->TimeStamp().toString("YYYYMMDD_hhmmss"));
+        // parse memory
+        m_pMemoryManager->SearchInMemory(event.Text());
+
+        // Create new memoryentry if neccessairy
+        m_pMemoryManager->AddToMemory(event.Text());
+
+        break;
+      }
+
+      case CoreState_Output:
+      {        
+        if (event.BrainNeurone())
+        {
+          QTextStream out(stdout);
+
+          foreach (cBrainExperience *pExp, event.BrainNeurone()->BrainExperiences())
+          {
+            out << pExp->Experience();
+          }
+          foreach (cBrainObject *pObj, event.BrainNeurone()->BrainObjects())
+          {
+            out << pObj->Name();
+          }
+        }
 
         break;
       }
@@ -64,14 +93,13 @@ void cCoreState::run()
       {
 
       }
-
     } /* switch (m_MainState); */
-  }
 
-  m_Mutex.lock();
-  m_eMainState = Idle;
-  m_Mutex.unlock();
+    m_Mutex.lock();
+    m_eMainState = CoreState_Idle;
+    m_Mutex.unlock();
 
+  } // while() /*
 }
 //----------------------------------------------------------------------------
 
@@ -90,7 +118,7 @@ cCoreState::cCoreState(QObject *parent) :
   qRegisterMetaType<EVENTS::cEvent>();
 
   // initialize mainstate
-  m_eMainState = Idle;
+  m_eMainState = CoreState_Idle;
 
   //Appconfig
   m_pAppConfig = SETTINGS::cAppConfig::Instance();
@@ -99,31 +127,41 @@ cCoreState::cCoreState(QObject *parent) :
   m_pEventHandler = EVENTS::cEventHandler::Instance();
   QObject::connect(m_pEventHandler, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
 
-  // create memorymanager
-  m_pMemoryManager = cMemoryManager::Instance();
-
   // create threads
 #ifdef USE_GUI
   m_GUI.show();
   m_pMainViewModel = new cMainViewModel();
   m_GUI.setModel(*m_pMainViewModel);
+
+  // create eyes
   m_pEye = new INPUT::cEye(m_pMainViewModel);
+
+  // create ears
   m_pEars = new INPUT::cEars(m_pMainViewModel);
 #else
+
+  // create eyes
   m_pEye = new INPUT::cEye();
+
+  // create ears
   m_pEars = new INPUT::cEars();
 #endif //USE_GUI
+  // text input reader
   m_pTextReader = new INPUT::cTextReader();
+  // create memorymanager
+  m_pMemoryManager = cMemoryManager::Instance();
 
+  m_pEventHandler->RegisterEvent(m_pTextReader);
+  m_pEventHandler->RegisterEvent(m_pEye);
+  m_pEventHandler->RegisterEvent(m_pEars);
+  m_pEventHandler->RegisterEvent(m_pMemoryManager);
 
-  // register threads to eventhandler
-  m_pEventHandler->RegisterThread(this, m_pTextReader);
-  m_pEventHandler->RegisterThread(this, m_pEye);
-
-  // start threads
+  // start IO threads
   m_pTextReader->start();
   m_pEye->start();
+  m_pEars->start();
 
+  // init Event queue
   m_EventQueue = QQueue<EVENTS::cEvent>();
 
 }
@@ -146,13 +184,23 @@ void cCoreState::OnEvent(const EVENTS::cEvent &event)
 {
 
   // evaluate received event
-  switch (event.UserEventId())
+  switch (event.EventId())
   {
 
-    case EVENTS::cEvent::ConsoleInput:
+    case EVENTS::cEvent::Event_ConsoleInput:
     {
       m_Mutex.lock();
-      m_eMainState = HandleConsoleInput;
+      m_eMainState = CoreState_Input;
+      m_EventQueue.enqueue(EVENTS::cEvent(event));
+      m_Mutex.unlock();
+
+      break;
+    }
+
+    case EVENTS::cEvent::Event_BrainNeuroneFound:
+    {
+      m_Mutex.lock();
+      m_eMainState = CoreState_Output;
       m_EventQueue.enqueue(EVENTS::cEvent(event));
       m_Mutex.unlock();
 

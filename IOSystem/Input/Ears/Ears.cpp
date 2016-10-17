@@ -37,7 +37,7 @@ namespace INPUT
 {
 
   cEars::cEars(cMainViewModel *widget, QObject *parent)
-      : cInputInterface(parent),
+      : cIOInterface(parent),
         m_fileHandler(0),
         m_audioInput(0)
   {

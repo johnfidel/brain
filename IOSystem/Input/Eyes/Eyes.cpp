@@ -6,7 +6,7 @@ namespace INPUT
   //-----------------------------------------------------------
   //
   cEye::cEye(cMainViewModel *widget, QObject *parent) :
-    cInputInterface(parent), m_pViewFinder(0), m_pWebCam(0)
+    cIOInterface(parent), m_pViewFinder(0), m_pWebCam(0)
   {
     // create webcam
     if (widget)

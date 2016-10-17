@@ -43,8 +43,9 @@ class cCoreState : public QThread
     /// \brief main enumaration for states
     enum CoreStateEnum
     {
-      Idle = 0,
-      HandleConsoleInput = 1
+      CoreState_Idle = 0,
+      CoreState_Input,
+      CoreState_Output
     };
 
     /// \brief stores the mainstate of core thread

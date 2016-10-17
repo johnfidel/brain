@@ -6,14 +6,14 @@
 class cJsonSerializer
 {
 
-public:
+  private:
 
-  /// \brief convert QJSonObject into string
-  static QString QJsonToString(const QJsonObject&);
+  public:
 
-  /// \brief convert a string to json Object
-  static QJsonObject QStringToJson(const QString&);
+    /// \brief save a QJSonObject to a file
+    static bool QJsonToFile(const QJsonObject &obj, const QString &File);
 
-  /// \brief save a QJSonObject to a file
-  static bool QJsonToFile(const QJsonObject&, const QString&);
+    /// \brief save a QJSonObject to a file
+    static QJsonObject QFileToJson(const QString &File);
+
 };

@@ -31,7 +31,7 @@
 #define AUDIOLEVELS_H
 
 #include "Drivers/Audio/AudioFileHandler.h"
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 #include "View/MainViewModel.h"
 
 #include <QAudioInput>
@@ -40,7 +40,7 @@
 namespace INPUT
 {
 
-  class cEars : public cInputInterface
+  class cEars : public cIOInterface
   {
       Q_OBJECT
 

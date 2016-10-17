@@ -52,5 +52,8 @@ int main(int argc, char *argv[])
   // mainloop
   return App.exec();
 
+  // log programstard
+  LOGGING::cLogger::Logger() << LOGGING::cLogMessage("Application terminated", LOGGING::LoggingLevelInfo);
+
 }
 

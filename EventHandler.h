@@ -21,7 +21,7 @@
 
 #include <QObject>
 
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 
 namespace EVENTS
 {
@@ -44,18 +44,18 @@ namespace EVENTS
       static cEventHandler *Instance();
 
       /// \brief Register any thread to the Eventhandler
-      bool RegisterThread(INPUT::cInputInterface *pThread);
-      bool RegisterThread(QThread *pMainThread, INPUT::cInputInterface *pThread);
+      bool RegisterEvent(EVENT::IEventInterface *pThread);
+      bool RegisterEvent(QThread *pMainThread, EVENT::IEventInterface *pEvent);
 
     signals:
 
       /// \brief Signalizes events
-      void Event(const EVENTS::cEvent&);
+      void Event(const EVENTS::cEvent &);
 
     public slots:
 
       /// \brief occures if an event of any thread is received
-      void OnEvent(const EVENTS::cEvent&);
+      void OnEvent(const EVENTS::cEvent &);
 
   };
 

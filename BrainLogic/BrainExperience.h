@@ -1,8 +1,8 @@
 /**
-* @file                     BrainObject.h
+* @file                     BrainExperience.h
 * @author                   RPi
-* @date                     04.01.2016
-* @brief                    This class describes a known object to the brain.
+* @date                     13.02.2016
+* @brief                    This class describes a Experience
 *
 *-------------------------------------------------------------------------------
 * @verbatim
@@ -10,7 +10,7 @@
 *
 * Rev:  Datum:      Wer:        Was:
 * ------------------------------------------------------------------------------
-* V00   04.01.2016  rappic      Writing initial version
+* V00   13.02.2016  rappic      Writing initial version
 *
 * @endverbatim
 *-------------------------------------------------------------------------------
@@ -23,30 +23,32 @@
 #include <QJsonObject>
 #include <QDateTime>
 
-class cBrainObject : public QObject
+#include "BrainLogic/BrainObject.h"
+
+class cBrainExperience : public QObject
 {
   Q_OBJECT
 private:
 
-  QString m_Name;
+  /// \brief list of cBrainObjects
+  QString m_Experience;
   //QImage *m_pImage;
   QDateTime m_TimeStamp;
 
 public:
 
   /// \brief standard ctor
-  explicit cBrainObject(QObject *parent = 0);
+  explicit cBrainExperience(QObject *parent = 0);
 
   /// \brief destructor
-  ~cBrainObject();
+  ~cBrainExperience();
 
   /// \brief Special constructor
-  explicit cBrainObject(const QString &name, QObject *parent = 0);
+  explicit cBrainExperience(const QString &experience, QObject *parent = 0);
 
   /// \brief Getter and setter
-  QString Name() const { return m_Name; }
-  void Name(const QString value) { m_Name = value; }
-  //QImage Image() const { return *m_pImage; }
+  QString Experience() const { return m_Experience; }
+  void Experience(const QString &value) { m_Experience = value; }
   QDateTime TimeStamp() const { return m_TimeStamp; }
   void TimeStamp(const QDateTime &value) { m_TimeStamp = value; }
 
@@ -54,7 +56,7 @@ public:
   QJsonObject toJson() const;
 
   /// \brief converst a JSon string into a cBrainObject
-  static cBrainObject* fromJson(const QJsonObject &);
+  static cBrainExperience* fromJson(const QJsonObject &);
 
 signals:
 

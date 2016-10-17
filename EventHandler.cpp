@@ -1,5 +1,5 @@
 #include "EventHandler.h"
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 
 //*****************************************************************************
 // Private functions
@@ -36,30 +36,15 @@ EVENTS::cEventHandler* EVENTS::cEventHandler::Instance()
 /// \param pThread
 /// \return
 ///
-bool EVENTS::cEventHandler::RegisterThread(INPUT::cInputInterface *pThread)
+bool EVENTS::cEventHandler::RegisterEvent(EVENT::IEventInterface *pEvent)
 {
 
-  if (pThread != 0)
+  if (pEvent != 0)
   {
-    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
-  }
-
-  return true;
-}
-//-----------------------------------------------------------------------------
-
-///
-/// \brief EVENTS::cEventHandler::RegisterThread
-/// \param pMainThread
-/// \param pThread
-/// \return
-///
-bool EVENTS::cEventHandler::RegisterThread(QThread *pMainThread, INPUT::cInputInterface *pThread)
-{
-  if ((pThread != 0) && (pMainThread != 0))
-  {
-    QObject::connect(pThread, SIGNAL(Event(EVENTS::cEvent)), this, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
-    QObject::connect(pMainThread, SIGNAL(Event(EVENTS::cEvent)), pThread, SLOT(OnEvent(EVENTS::cEvent)), Qt::DirectConnection);
+    QObject::connect(dynamic_cast<QObject*>(pEvent), SIGNAL(Event(EVENTS::cEvent)),
+                                                     this, SLOT(OnEvent(EVENTS::cEvent)));
+    QObject::connect(this, SIGNAL(Event(EVENTS::cEvent)),
+                      dynamic_cast<QObject*>(pEvent), SLOT(OnEvent(EVENTS::cEvent)));
   }
 
   return true;

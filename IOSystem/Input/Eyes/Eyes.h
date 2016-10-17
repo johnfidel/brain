@@ -1,7 +1,7 @@
 #ifndef CEYE_H
 #define CEYE_H
 
-#include "IOSystem/Input/InputInterface.h"
+#include "IOSystem/IOInterface.h"
 #include "Drivers/WebCam/WebCam.h"
 
 #include <QMutex>
@@ -10,7 +10,7 @@
 namespace INPUT
 {
 
-  class cEye : public cInputInterface
+  class cEye : public cIOInterface
   {
     Q_OBJECT
 
