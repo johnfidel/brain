@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# local variables
+DESTDIR=build-brain
+QT_VERSION=5.7
+QT_TARGET_PLATFORM=gcc_64
+
+echo -n "look for locate..."
+if [ -z $(which locate) ]; then
+	echo "locate is not installed. Try apt-get install locate"
+	exit 1
+fi
+echo ok
+  
+# get qt path
+echo -n "look for qmake..."
+qtpath=$(locate bin/qmake| grep $QT_VERSION| grep $QT_TARGET_PLATFORM)
+if [ -n "$qtpath" ]; then
+	QT_QMAKE_PATH=$qtpath
+fi
+echo ok
+#check qmake
+echo -e "use $($QT_QMAKE_PATH -v)"
+
+#check make
+echo -n  "look for make..."
+if [ -z $(which make) ]; then
+	echo "make seems not to be installed. Try apt-get install build-essentials"
+	exit 1
+fi
+echo ok 
+
+#dependencies --> 	libasound2-dev libgstreamer0.10-dev
+
+#gstreamer
+echo -n  "look for gstreamer..."
+if [ $(ldconfig -p| grep libgstreamer-0.10| wc -l) -lt 1 ]; then
+	echo "gstreamer not installed! try: apt-get install libgstreamer-0.10-dev"
+	exit 1
+fi
+echo ok
+
+# libasound2
+echo -n  "look for asound..."
+if [ $(ldconfig -p| grep libasound| wc -l) -lt 1 ]; then
+	echo "libasound not installed! try: apt-get install libasound-dev"
+	exit 1
+fi
+echo ok
+
+if [  ! -d $DESTDIR ]; then
+	mkdir -p $DESTDIR
+fi
+cd $DESTDIR
+
+# qmake
+$QT_QMAKE_PATH ../src/brain.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
+
+exit 0

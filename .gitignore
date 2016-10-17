@@ -1,1 +1,6 @@
+#direcotries
 /.project
+build-brain/
+
+#files
+*.user
