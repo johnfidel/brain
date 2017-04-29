@@ -1,0 +1,3 @@
+[submodule "tools/qtspeech"]
+	path = tools/qtspeech
+	url = https://github.com/qt/qtspeech.git
