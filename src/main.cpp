@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QDateTime>
+#include <QTextToSpeech>
 
 #include "ModDefs.h"
 #include "BrainLogic/CoreState.h"
@@ -38,6 +39,14 @@ int main(int argc, char *argv[])
   QApplication App(argc, argv);
 
   initApplication(&App);
+
+  QStringList engineList = QTextToSpeech::availableEngines();
+  QTextToSpeech speech(engineList.first());
+  speech.say("hello");
+
+  speech.setLocale(QLocale::German);
+
+  //speech.say("hallo");
 
   // create mainthread  
   cCoreState BrainCore;

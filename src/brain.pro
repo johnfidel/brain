@@ -3,6 +3,9 @@ QT += multimedia multimediawidgets
 QT += network
 QT += websockets
 QT += charts widgets
+QT += texttospeech
+
+INCLUDEPATH+=tools/build-qtspeech/include/QtTextToSpeech
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

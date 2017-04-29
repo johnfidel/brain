@@ -30,12 +30,12 @@ if [ -z $(which make) ]; then
 fi
 echo ok 
 
-#dependencies --> 	libasound2-dev libgstreamer0.10-dev
+#dependencies --> 	libasound2 libgstreamer0.10 libspeechd
 
 #gstreamer
 echo -n  "look for gstreamer..."
 if [ $(ldconfig -p| grep libgstreamer-0.10| wc -l) -lt 1 ]; then
-	echo "gstreamer not installed! try: apt-get install libgstreamer-0.10-dev"
+	echo "gstreamer not installed! try: apt-get install libgstreamer-0.10"
 	exit 1
 fi
 echo ok
@@ -43,7 +43,15 @@ echo ok
 # libasound2
 echo -n  "look for asound..."
 if [ $(ldconfig -p| grep libasound| wc -l) -lt 1 ]; then
-	echo "libasound not installed! try: apt-get install libasound-dev"
+	echo "libasound not installed! try: apt-get install libasound"
+	exit 1
+fi
+echo ok
+
+# libspeechd
+echo -n  "look for libspeechd..."
+if [ $(ldconfig -p| grep libasound| wc -l) -lt 1 ]; then
+	echo "libspeechd not installed! try: apt-get install libspeechd"
 	exit 1
 fi
 echo ok

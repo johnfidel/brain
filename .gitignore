@@ -1,6 +1,7 @@
 #direcotries
 /.project
 build-brain/
+tools/build-qtspeech
 
 #files
 *.user

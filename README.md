@@ -1,5 +1,12 @@
 # brain
 
+## dependencies
+
+gstreamer
+lpulse
+glib-2.0
+
+# build
 Use normal "configure" "make" procedure to build this project.
 
 But cd into "build-brain" directory before to run make

@@ -65,7 +65,7 @@ bool cAudioFileHandler::saveFile()
   static int fileNr = 0;
   QString filename = QString("audio") + QString::number(fileNr++) + QString(".raw");
   QFile file(filename);
-  file.open(QIODevice::WriteOnly);  
+  file.open(QIODevice::WriteOnly);   
 
   while (m_DataQueue.count() > 0)
   {
@@ -162,7 +162,6 @@ qint64 cAudioFileHandler::writeData(const char *data, qint64 maxSize)
     {
       m_DataQueue.dequeue();
     }
-    qDebug() << "removed: " << (addedPoints - addedPointsSince200ms) << " data";
     addedPoints = 0;
     addedPointsSince200ms = 0;
   }
